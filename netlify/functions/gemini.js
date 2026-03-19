@@ -1,10 +1,4 @@
 // ══ NETLIFY FUNCTION — Gemini Proxy ══
-//
-// Setup:
-//   1. Deploy to Netlify
-//   2. Go to Site Settings → Environment Variables
-//   3. Add GEMINI_API_KEY with your Google AI Studio key
-//      Get one at: https://aistudio.google.com
 
 exports.handler = async function(event) {
   if (event.httpMethod !== 'POST') {
@@ -13,10 +7,7 @@ exports.handler = async function(event) {
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'GEMINI_API_KEY not set in Netlify environment variables' })
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: 'GEMINI_API_KEY not set' }) };
   }
 
   const { question, systemPrompt } = JSON.parse(event.body);
@@ -29,7 +20,7 @@ exports.handler = async function(event) {
       body: JSON.stringify({
         system_instruction: { parts: [{ text: systemPrompt }] },
         contents: [{ parts: [{ text: question }] }],
-        generationConfig: { maxOutputTokens: 500 },
+        generationConfig: { maxOutputTokens: 800, temperature: 0.9 },
       }),
     }
   );
@@ -37,15 +28,23 @@ exports.handler = async function(event) {
   const data = await response.json();
 
   if (!response.ok) {
-    return {
-      statusCode: response.status,
-      body: JSON.stringify({ error: data.error?.message || 'Gemini error' })
-    };
+    return { statusCode: response.status, body: JSON.stringify({ error: data.error?.message || 'Gemini error' }) };
   }
+
+  // Log finish reason to Netlify function logs for debugging
+  const candidate = data.candidates[0];
+  console.log('Gemini finishReason:', candidate.finishReason);
+  console.log('Gemini text length:', candidate.content.parts[0].text.length);
+
+  // Collect ALL parts in case response is split across multiple
+  const text = candidate.content.parts.map(p => p.text).join('');
 
   return {
     statusCode: 200,
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text: data.candidates[0].content.parts[0].text }),
+    body: JSON.stringify({ 
+      text,
+      finishReason: candidate.finishReason 
+    }),
   };
 };
