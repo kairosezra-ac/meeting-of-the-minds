@@ -1,0 +1,70 @@
+/* ══ MAIN CSS — Variables, Reset, Base ══ */
+:root {
+  --bg:       #060606;
+  --surface:  #0f0f0f;
+  --border:   #1a1a1a;
+  --text:     #f0f0f0;
+  --muted:    #666;
+  --dim:      #444;
+
+  /* Model brand colors */
+  --claude:   #F26522;  /* Anthropic orange */
+  --chatgpt:  #10a37f;  /* OpenAI green */
+  --gemini:   #FBBC04;  /* Google yellow */
+  --mistral:  #ED2939;  /* French flag red */
+  --deepseek: #5B6EF5;  /* DeepSeek periwinkle */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+
+.tab {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.2s;
+  user-select: none;
+}
+.tab:hover { color: var(--text); }
+.tab.active-landing  { color: var(--text);     border-bottom-color: var(--text); }
+.tab.active-mod      { color: var(--text);     border-bottom-color: var(--text); }
+.tab.active-backstage{ color: var(--muted);    border-bottom-color: var(--muted); }
+.tab.active-claude   { color: var(--claude);   border-bottom-color: var(--claude); }
+.tab.active-chatgpt  { color: var(--chatgpt);  border-bottom-color: var(--chatgpt); }
+.tab.active-gemini   { color: var(--gemini);   border-bottom-color: var(--gemini); }
+.tab.active-mistral  { color: var(--mistral);  border-bottom-color: var(--mistral); }
+.tab.active-deepseek { color: var(--deepseek); border-bottom-color: var(--deepseek); }
+
+/* ── PANELS ── */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }

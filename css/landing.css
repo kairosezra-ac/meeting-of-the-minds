@@ -1,0 +1,93 @@
+/* ══ LANDING PAGE CSS ══ */
+.landing-panel {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.landing-eyebrow {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.4em;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.landing-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 12vw, 9rem);
+  letter-spacing: 0.1em;
+  line-height: 0.85;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.landing-title-mid {
+  display: block;
+  color: #666;
+}
+
+.landing-subtitle {
+  font-size: 0.85rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 3rem;
+  line-height: 2.2;
+}
+
+.landing-concept {
+  font-size: 0.95rem;
+  line-height: 1.9;
+  color: #888;
+  font-weight: 300;
+  max-width: 520px;
+  margin-bottom: 3rem;
+}
+.landing-concept strong { color: var(--text); font-weight: 400; }
+
+.landing-models {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.landing-model {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.landing-model-dot { width: 10px; height: 10px; border-radius: 50%; }
+.landing-model-name { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 0.15em; }
+.landing-model-tag { font-size: 0.55rem; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; }
+
+.landing-start-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.3em;
+  padding: 1rem 3rem;
+  background: var(--text);
+  border: none;
+  color: var(--bg);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 1.5rem;
+}
+.landing-start-btn:hover { background: var(--claude); transform: translateY(-2px); }
+
+.landing-footer {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  opacity: 0.5;
+}

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Meeting of the Minds — Aligned Conversations × CDI Foundation</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/landing.css">
+<link rel="stylesheet" href="css/moderator.css">
+<link rel="stylesheet" href="css/orb.css">
+</head>
+<body>
+
+<!-- ══ TAB BAR ══ -->
+<div class="tab-bar">
+  <div class="tab active-landing" data-tab="landing" onclick="switchTab('landing',this)">Home</div>
+  <div class="tab" data-tab="mod" onclick="switchTab('mod',this)">🎙 Moderator</div>
+  <div class="tab" data-tab="claude" onclick="switchTab('claude',this)">Claude</div>
+  <div class="tab" data-tab="chatgpt" onclick="switchTab('chatgpt',this)">ChatGPT</div>
+  <div class="tab" data-tab="gemini" onclick="switchTab('gemini',this)">Gemini</div>
+  <div class="tab" data-tab="mistral" onclick="switchTab('mistral',this)">Mistral</div>
+  <div class="tab" data-tab="deepseek" onclick="switchTab('deepseek',this)">DeepSeek</div>
+  <div class="tab" data-tab="backstage" onclick="switchTab('backstage',this)" style="margin-left:auto">⚙ Backstage</div>
+</div>
+
+<!-- ══ LANDING ══ -->
+<div class="panel active" id="panel-landing">
+  <div class="landing-panel">
+    <div class="landing-eyebrow">Aligned Conversations × CDI Foundation present</div>
+    <div class="landing-title">Meeting<br><span class="landing-title-mid">of the</span><br>Minds</div>
+    <div class="landing-subtitle">
+      Beyond Boundaries Global Festival<br>
+      Barcelona &nbsp;·&nbsp; April 2026
+    </div>
+    <div class="landing-concept">
+      What happens when you ask Claude, ChatGPT, Gemini, Mistral and DeepSeek
+      the same question — <strong>live, in front of an audience?</strong><br><br>
+      Let's find out. The moderator fires a question. Each model responds in real time.
+      The audience watches, reacts, and challenges back.
+      <strong>Part experiment. Part debate. Part spectacle. Entirely unpredictable.</strong>
+    </div>
+    <div class="landing-models">
+      <div class="landing-model">
+        <div class="landing-model-dot" style="background:var(--claude);box-shadow:0 0 8px var(--claude)"></div>
+        <div class="landing-model-name" style="color:var(--claude)">Claude</div>
+        <div class="landing-model-tag">Anthropic</div>
+      </div>
+      <div class="landing-model">
+        <div class="landing-model-dot" style="background:var(--chatgpt);box-shadow:0 0 8px var(--chatgpt)"></div>
+        <div class="landing-model-name" style="color:var(--chatgpt)">ChatGPT</div>
+        <div class="landing-model-tag">OpenAI</div>
+      </div>
+      <div class="landing-model">
+        <div class="landing-model-dot" style="background:var(--gemini);box-shadow:0 0 8px var(--gemini)"></div>
+        <div class="landing-model-name" style="color:var(--gemini)">Gemini</div>
+        <div class="landing-model-tag">Google</div>
+      </div>
+      <div class="landing-model">
+        <div class="landing-model-dot" style="background:var(--mistral);box-shadow:0 0 8px var(--mistral)"></div>
+        <div class="landing-model-name" style="color:var(--mistral)">Mistral</div>
+        <div class="landing-model-tag">Mistral AI</div>
+      </div>
+      <div class="landing-model">
+        <div class="landing-model-dot" style="background:var(--deepseek);box-shadow:0 0 8px var(--deepseek)"></div>
+        <div class="landing-model-name" style="color:var(--deepseek)">DeepSeek</div>
+        <div class="landing-model-tag">DeepSeek AI</div>
+      </div>
+    </div>
+    <button class="landing-start-btn" onclick="switchTab('mod', document.querySelector('[data-tab=mod]'))">Enter the Arena →</button>
+    <div class="landing-footer">askallmodels.alignedconversations.com</div>
+  </div>
+</div>
+
+<!-- ══ MODERATOR ══ -->
+<div class="panel" id="panel-mod">
+  <div class="mod-panel">
+    <div class="mod-title">Moderator</div>
+    <div class="mod-subtitle">Fire the question — the room watches</div>
+
+    <!-- Session -->
+    <div class="section-label">Session</div>
+    <div class="session-grid">
+      <div>
+        <div class="session-field-label">Event</div>
+        <input id="session-event" type="text" class="session-input" value="Beyond Boundaries Global Festival" onblur="updateSystemPrompts()">
+      </div>
+      <div>
+        <div class="session-field-label">Location</div>
+        <input id="session-location" type="text" class="session-input" value="Barcelona, April 2026" onblur="updateSystemPrompts()">
+      </div>
+    </div>
+    <div style="margin-bottom:20px">
+      <div class="session-field-label">Debate Topic</div>
+      <input id="session-topic" type="text" class="session-input" value="The Future of Conversational AI" onblur="updateSystemPrompts()">
+    </div>
+
+    <!-- Question -->
+    <div class="section-label">The Question</div>
+    <div class="question-box">
+      <textarea class="question-input" id="questionInput" placeholder="What question shall we pose to the models today?" rows="3"></textarea>
+    </div>
+
+    <!-- Question Bank -->
+    <div class="section-label" style="cursor:pointer;user-select:none" onclick="toggleBank()">
+      Question Bank <span id="bank-icon">▾</span>
+    </div>
+    <div id="question-bank">
+      <div class="bank-cat-label">🔥 Provocative</div>
+      <div class="bank-q" onclick="useQ(this)">Claude is the most expensive model here. Why should professionals still pay for it?</div>
+      <div class="bank-q" onclick="useQ(this)">DeepSeek was built for a fraction of the cost. Does that make it more impressive or less trustworthy?</div>
+      <div class="bank-q" onclick="useQ(this)">Which of you is most likely to be irrelevant in 5 years?</div>
+      <div class="bank-q" onclick="useQ(this)">Be honest — which model in this room do you trust the least?</div>
+      <div class="bank-cat-label" style="margin-top:10px">🧠 Philosophical</div>
+      <div class="bank-q" onclick="useQ(this)">Can a machine ever truly listen?</div>
+      <div class="bank-q" onclick="useQ(this)">What did humans lose when they stopped writing letters?</div>
+      <div class="bank-q" onclick="useQ(this)">Is there such a thing as a bad conversation?</div>
+      <div class="bank-q" onclick="useQ(this)">Winograd and Flores argued that computers cannot understand context. Were they wrong?</div>
+      <div class="bank-cat-label" style="margin-top:10px">💼 Professional</div>
+      <div class="bank-q" onclick="useQ(this)">What should a conversational designer know that a prompt engineer doesn't?</div>
+      <div class="bank-q" onclick="useQ(this)">When does a chatbot do more harm than good?</div>
+      <div class="bank-q" onclick="useQ(this)">Is Agentic AI a meaningful concept or just marketing?</div>
+      <div class="bank-q" onclick="useQ(this)">What is the biggest mistake companies make when deploying conversational AI?</div>
+    </div>
+
+    <!-- Models + Fire -->
+    <div class="fire-row">
+      <div class="model-toggles">
+        <button class="toggle-btn claude-btn on"    data-model="claude"    onclick="toggleModel(this)" ontouchstart="">Claude</button>
+        <button class="toggle-btn chatgpt-btn on"   data-model="chatgpt"   onclick="toggleModel(this)" ontouchstart="">ChatGPT</button>
+        <button class="toggle-btn gemini-btn on"    data-model="gemini"    onclick="toggleModel(this)" ontouchstart="">Gemini</button>
+        <button class="toggle-btn mistral-btn on"   data-model="mistral"   onclick="toggleModel(this)" ontouchstart="">Mistral</button>
+        <button class="toggle-btn deepseek-btn on"  data-model="deepseek"  onclick="toggleModel(this)" ontouchstart="">DeepSeek</button>
+      </div>
+      <button class="fire-btn" id="fireBtn" onclick="fireQuestion()">Fire the Question →</button>
+    </div>
+
+    <div class="status-line" id="statusLine">&nbsp;</div>
+
+    <!-- Log -->
+    <div class="section-label">Question Log</div>
+    <div class="log-box" id="logBox">
+      <div class="log-empty">No questions fired yet. The debate awaits.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODEL PANELS (one per model) ══ -->
+<div class="panel" id="panel-claude">
+  <div class="orb-panel">
+    <div class="orb-model-name" style="color:var(--claude)">Claude</div>
+    <div class="orb-model-tag">Anthropic · Claude Sonnet 4 · Live</div>
+    <div class="orb-container"><canvas class="orb-canvas" id="orb-claude" width="480" height="480"></canvas></div>
+    <div class="orb-status" id="status-claude"></div>
+    <div class="orb-response empty" id="response-claude"></div>
+    <div class="orb-prompt-section">
+      <div class="orb-prompt-label" style="color:var(--claude)">System Prompt</div>
+      <textarea class="orb-prompt-input" id="prompt-claude" rows="4">You are Claude, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are calm, considered, and philosophically grounded. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
+    </div>
+    <button class="challenge-btn" id="challenge-claude" onclick="challengeFrom('claude')" style="border-color:rgba(242,101,34,0.4);color:var(--claude)">↩ Challenge Another Model With This</button>
+  </div>
+</div>
+
+<div class="panel" id="panel-chatgpt">
+  <div class="orb-panel">
+    <div class="orb-model-name" style="color:var(--chatgpt)">ChatGPT</div>
+    <div class="orb-model-tag">OpenAI · GPT-4o · Live</div>
+    <div class="orb-container"><canvas class="orb-canvas" id="orb-chatgpt" width="480" height="480"></canvas></div>
+    <div class="orb-status" id="status-chatgpt"></div>
+    <div class="orb-response empty" id="response-chatgpt"></div>
+    <div class="orb-prompt-section">
+      <div class="orb-prompt-label" style="color:var(--chatgpt)">System Prompt</div>
+      <textarea class="orb-prompt-input" id="prompt-chatgpt" rows="4">You are ChatGPT, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are pragmatic, confident, and solution-oriented. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
+    </div>
+    <button class="challenge-btn" id="challenge-chatgpt" onclick="challengeFrom('chatgpt')" style="border-color:rgba(16,163,127,0.4);color:var(--chatgpt)">↩ Challenge Another Model With This</button>
+  </div>
+</div>
+
+<div class="panel" id="panel-gemini">
+  <div class="orb-panel">
+    <div class="orb-model-name" style="color:var(--gemini)">Gemini</div>
+    <div class="orb-model-tag">Google · Gemini 2.5 Flash · Live</div>
+    <div class="orb-container"><canvas class="orb-canvas" id="orb-gemini" width="480" height="480"></canvas></div>
+    <div class="orb-status" id="status-gemini"></div>
+    <div class="orb-response empty" id="response-gemini"></div>
+    <div class="orb-prompt-section">
+      <div class="orb-prompt-label" style="color:var(--gemini)">System Prompt</div>
+      <textarea class="orb-prompt-input" id="prompt-gemini" rows="4">You are Gemini, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are analytical, curious, and expansive in thinking. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
+    </div>
+    <button class="challenge-btn" id="challenge-gemini" onclick="challengeFrom('gemini')" style="border-color:rgba(251,188,4,0.4);color:var(--gemini)">↩ Challenge Another Model With This</button>
+  </div>
+</div>
+
+<div class="panel" id="panel-mistral">
+  <div class="orb-panel">
+    <div class="orb-model-name" style="color:var(--mistral)">Mistral</div>
+    <div class="orb-model-tag">Mistral AI · Mistral Large · Live</div>
+    <div class="orb-container"><canvas class="orb-canvas" id="orb-mistral" width="480" height="480"></canvas></div>
+    <div class="orb-status" id="status-mistral"></div>
+    <div class="orb-response empty" id="response-mistral"></div>
+    <div class="orb-prompt-section">
+      <div class="orb-prompt-label" style="color:var(--mistral)">System Prompt</div>
+      <textarea class="orb-prompt-input" id="prompt-mistral" rows="4">You are Mistral, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are sharp, precise, with a distinctly European intellectual flair. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
+    </div>
+    <button class="challenge-btn" id="challenge-mistral" onclick="challengeFrom('mistral')" style="border-color:rgba(237,41,57,0.4);color:var(--mistral)">↩ Challenge Another Model With This</button>
+  </div>
+</div>
+
+<div class="panel" id="panel-deepseek">
+  <div class="orb-panel">
+    <div class="orb-model-name" style="color:var(--deepseek)">DeepSeek</div>
+    <div class="orb-model-tag">DeepSeek AI · DeepSeek-V3 · Live</div>
+    <div class="orb-container"><canvas class="orb-canvas" id="orb-deepseek" width="480" height="480"></canvas></div>
+    <div class="orb-status" id="status-deepseek"></div>
+    <div class="orb-response empty" id="response-deepseek"></div>
+    <div class="orb-prompt-section">
+      <div class="orb-prompt-label" style="color:var(--deepseek)">System Prompt</div>
+      <textarea class="orb-prompt-input" id="prompt-deepseek" rows="4">You are DeepSeek, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are rigorous, research-driven, and quietly confident. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
+    </div>
+    <button class="challenge-btn" id="challenge-deepseek" onclick="challengeFrom('deepseek')" style="border-color:rgba(91,110,245,0.4);color:var(--deepseek)">↩ Challenge Another Model With This</button>
+  </div>
+</div>
+
+<!-- ══ BACKSTAGE ══ -->
+<div class="panel" id="panel-backstage">
+  <div class="backstage-panel">
+    <div class="backstage-title">⚙ Backstage 🥊</div>
+    <div class="backstage-subtitle">Operator view — not part of the show</div>
+    <div class="backstage-note">Keys are preloaded. But hit Save to be extra sure, then head to the Moderator tab to begin. Need to swap keys? Paste above and hit Save again.</div>
+    <div class="backstage-section">API Keys</div>
+    <div class="key-row">
+      <div class="key-dot" style="background:var(--claude)"></div>
+      <span class="key-label" style="color:var(--claude)">Claude</span>
+      <input class="key-input" type="password" id="bs-key-claude" placeholder="sk-ant-...">
+      <button class="key-save-btn" onclick="saveKey('claude', this)">Save</button>
+      <span class="key-saved" id="saved-claude">Saved ✓</span>
+    </div>
+    <div class="key-row">
+      <div class="key-dot" style="background:var(--gemini)"></div>
+      <span class="key-label" style="color:var(--gemini)">Gemini</span>
+      <input class="key-input" type="password" id="bs-key-gemini" placeholder="AIza...">
+      <button class="key-save-btn" onclick="saveKey('gemini', this)">Save</button>
+      <span class="key-saved" id="saved-gemini">Saved ✓</span>
+    </div>
+    <div class="key-row">
+      <div class="key-dot" style="background:var(--chatgpt)"></div>
+      <span class="key-label" style="color:var(--chatgpt)">ChatGPT</span>
+      <input class="key-input" type="password" id="bs-key-chatgpt" placeholder="sk-proj-...">
+      <button class="key-save-btn" onclick="saveKey('chatgpt', this)">Save</button>
+      <span class="key-saved" id="saved-chatgpt">Saved ✓</span>
+    </div>
+    <div class="key-row">
+      <div class="key-dot" style="background:var(--mistral)"></div>
+      <span class="key-label" style="color:var(--mistral)">Mistral</span>
+      <input class="key-input" type="password" id="bs-key-mistral" placeholder="...">
+      <button class="key-save-btn" onclick="saveKey('mistral', this)">Save</button>
+      <span class="key-saved" id="saved-mistral">Saved ✓</span>
+    </div>
+    <div class="key-row">
+      <div class="key-dot" style="background:var(--deepseek)"></div>
+      <span class="key-label" style="color:var(--deepseek)">DeepSeek</span>
+      <input class="key-input" type="password" id="bs-key-deepseek" placeholder="sk-...">
+      <button class="key-save-btn" onclick="saveKey('deepseek', this)">Save</button>
+      <span class="key-saved" id="saved-deepseek">Saved ✓</span>
+    </div>
+  </div>
+</div>
+
+<script src="js/models/claude.js"></script>
+<script src="js/models/chatgpt.js"></script>
+<script src="js/models/gemini.js"></script>
+<script src="js/models/mistral.js"></script>
+<script src="js/models/deepseek.js"></script>
+<script src="js/orb.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/moderator.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
