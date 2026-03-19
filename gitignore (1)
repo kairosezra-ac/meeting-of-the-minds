@@ -1,0 +1,10 @@
+# Mac junk
+.DS_Store
+
+# Environment variables — never commit these
+.env
+.env.local
+.env.*
+
+# Node
+node_modules/
