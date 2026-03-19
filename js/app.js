@@ -145,15 +145,15 @@ async function fireQuestion() {
     try {
       let text;
       if (model === 'claude') {
-        text = await callClaude(question, claudeKey);
+        text = await callClaude(question);
       } else if (model === 'gemini') {
-        text = await callGemini(question, claudeKey);
+        text = await callGemini(question);
       } else if (model === 'chatgpt') {
-        text = await callChatGPT(question, claudeKey);
+        text = await callChatGPT(question);
       } else if (model === 'mistral') {
-        text = await callMistral(question, claudeKey);
+        text = await callMistral(question);
       } else if (model === 'deepseek') {
-        text = await callDeepSeek(question, claudeKey);
+        text = await callDeepSeek(question);
       }
 
       lastResponse[model] = text;
