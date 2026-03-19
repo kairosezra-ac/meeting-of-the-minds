@@ -1,38 +1,33 @@
 // ══ CLAUDE — Anthropic Claude Sonnet 4 ══
-// 
+//
 // Owner: [assign to a 42 student]
 // Persona: Calm, considered, philosophically grounded
-// API: Direct browser call (Anthropic allows this with the special header)
+// API: Via Netlify Function proxy (key stored server-side)
+//      See: netlify/functions/claude.js
+//      Set ANTHROPIC_API_KEY in Netlify environment variables
 //
 // To customize:
 //   - Edit the system prompt in index.html under #prompt-claude
-//   - Modify callClaude() below to change model, temperature, max_tokens
-//   - The persona should feel distinct from the other models
+//   - Modify the Netlify function to change model or max_tokens
 
-async function callClaude(question, apiKey) {
+async function callClaude(question) {
   const systemPrompt = document.getElementById('prompt-claude').value;
+  return await callViaProxy('claude', question, systemPrompt);
+}
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
+// Generic proxy call — used by all models
+async function callViaProxy(model, question, systemPrompt) {
+  const response = await fetch(`/.netlify/functions/${model}`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 300,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: question }],
-    }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ question, systemPrompt }),
   });
 
   if (!response.ok) {
     const err = await response.json();
-    throw new Error(err.error ? err.error.message : 'Claude API error');
+    throw new Error(err.error || `${model} proxy error`);
   }
 
   const data = await response.json();
-  return data.content[0].text;
+  return data.text;
 }

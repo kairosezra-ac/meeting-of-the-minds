@@ -2,29 +2,16 @@
 //
 // Owner: [assign to a 42 student]
 // Persona: Sharp, precise, distinctly European intellectual flair
-// API: Via Netlify Function proxy (Mistral blocks direct browser calls)
+// API: Via Netlify Function proxy (key stored server-side)
 //      See: netlify/functions/mistral.js
+//      Set MISTRAL_API_KEY in Netlify environment variables
+//      Get one at: https://console.mistral.ai
 //
 // To customize:
 //   - Edit the system prompt in index.html under #prompt-mistral
-//   - Modify callMistral() below to change model or parameters
-//   - Set MISTRAL_API_KEY in Netlify environment variables
+//   - Modify the Netlify function to change model or parameters
 
-async function callMistral(question, claudeKey) {
+async function callMistral(question) {
   const systemPrompt = document.getElementById('prompt-mistral').value;
-
-  const response = await fetch('/.netlify/functions/mistral', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ question, systemPrompt }),
-  });
-
-  // If Netlify function not available, fall back to Claude persona
-  if (!response.ok) {
-    console.warn('Mistral proxy unavailable, falling back to Claude persona');
-    return await callClaude(question, claudeKey, systemPrompt);
-  }
-
-  const data = await response.json();
-  return data.text;
+  return await callViaProxy('mistral', question, systemPrompt);
 }

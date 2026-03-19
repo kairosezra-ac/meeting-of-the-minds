@@ -72,20 +72,24 @@ Then open `http://localhost:8888` in your browser.
 
 ## API Keys
 
-| Model    | Where to get a key | How it's called |
-|----------|--------------------|-----------------|
-| Claude   | [console.anthropic.com](https://console.anthropic.com) | Direct browser call |
-| Gemini   | [aistudio.google.com](https://aistudio.google.com) | Direct browser call |
-| ChatGPT  | [platform.openai.com](https://platform.openai.com) | Via Netlify Function |
-| Mistral  | [console.mistral.ai](https://console.mistral.ai) | Via Netlify Function |
-| DeepSeek | [platform.deepseek.com](https://platform.deepseek.com) | Via Netlify Function |
+| Model    | Where to get a key | How it's called | Key location |
+|----------|--------------------|-----------------|--------------|
+| Claude   | [console.anthropic.com](https://console.anthropic.com) | Direct browser call | Baked in as fallback |
+| Gemini   | [aistudio.google.com](https://aistudio.google.com) | Via Netlify Function | Netlify env var |
+| ChatGPT  | [platform.openai.com](https://platform.openai.com) | Via Netlify Function | Netlify env var |
+| Mistral  | [console.mistral.ai](https://console.mistral.ai) | Via Netlify Function | Netlify env var |
+| DeepSeek | [platform.deepseek.com](https://platform.deepseek.com) | Via Netlify Function | Netlify env var |
 
-**For Netlify deployment**, add these environment variables in Netlify → Site Settings → Environment Variables:
+**No keys live in the code.** All keys are stored as Netlify environment variables.
+
+Add these in Netlify → Site Configuration → Environment Variables:
+- `ANTHROPIC_API_KEY`
+- `GEMINI_API_KEY`
 - `OPENAI_API_KEY`
 - `MISTRAL_API_KEY`
 - `DEEPSEEK_API_KEY`
 
-Claude and Gemini keys are entered via the Backstage panel in the app.
+If a key is missing, that model will return an error message.
 
 ---
 

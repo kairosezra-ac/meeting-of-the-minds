@@ -2,28 +2,17 @@
 // Navigation, key management, fire logic, model toggles
 
 // ── Keys ──
-const PRESET_KEYS = {
-  claude:   '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',
-  gemini:   'AIzaSyBu1gtpvkcxap9ecEWgS-nWYiPl5I26h5o',
-  // ChatGPT, Mistral, DeepSeek keys go in Netlify environment variables
-  // See netlify/functions/ for proxy setup
-};
+// No keys in the code — all keys live in Netlify environment variables.
+// See netlify/functions/ for proxy setup and README.md for setup instructions.
+const PRESET_KEYS = {};
 
 function saveAllKeys() {
-  Object.keys(PRESET_KEYS).forEach(function(model) {
-    const val = PRESET_KEYS[model];
-    if (val && !localStorage.getItem('debate-key-' + model)) {
-      localStorage.setItem('debate-key-' + model, val);
-    }
-  });
+  // No preset keys — all keys are in Netlify environment variables
 }
 
 function loadKeys() {
-  ['claude', 'gemini', 'chatgpt', 'mistral', 'deepseek'].forEach(function(model) {
-    const val = localStorage.getItem('debate-key-' + model) || PRESET_KEYS[model] || '';
-    const el = document.getElementById('bs-key-' + model);
-    if (el && val) el.value = val;
-  });
+  // Keys are stored in Netlify environment variables, not localStorage
+  // Nothing to load here
 }
 
 function saveKey(model, btn) {
@@ -131,12 +120,6 @@ async function fireQuestion() {
   const question = document.getElementById('questionInput').value.trim();
   if (!question) return;
 
-  const claudeKey = localStorage.getItem('debate-key-claude') || '';
-  if (!claudeKey) {
-    setStatus('Add your Claude key in Backstage', '');
-    return;
-  }
-
   isFiring = true;
   document.getElementById('fireBtn').disabled = true;
   addToLog(question);
@@ -161,12 +144,10 @@ async function fireQuestion() {
 
     try {
       let text;
-      const geminiKey = localStorage.getItem('debate-key-gemini') || '';
-
       if (model === 'claude') {
         text = await callClaude(question, claudeKey);
       } else if (model === 'gemini') {
-        text = await callGemini(question, geminiKey);
+        text = await callGemini(question, claudeKey);
       } else if (model === 'chatgpt') {
         text = await callChatGPT(question, claudeKey);
       } else if (model === 'mistral') {
