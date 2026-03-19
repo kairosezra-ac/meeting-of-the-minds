@@ -29,7 +29,7 @@ exports.handler = async function(event) {
       body: JSON.stringify({
         system_instruction: { parts: [{ text: systemPrompt }] },
         contents: [{ parts: [{ text: question }] }],
-        generationConfig: { maxOutputTokens: 300 },
+        generationConfig: { maxOutputTokens: 500 },
       }),
     }
   );
