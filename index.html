@@ -226,43 +226,7 @@
   <div class="backstage-panel">
     <div class="backstage-title">⚙ Backstage 🥊</div>
     <div class="backstage-subtitle">Operator view — not part of the show</div>
-    <div class="backstage-note">Keys are preloaded. But hit Save to be extra sure, then head to the Moderator tab to begin. Need to swap keys? Paste above and hit Save again.</div>
-    <div class="backstage-section">API Keys</div>
-    <div class="key-row">
-      <div class="key-dot" style="background:var(--claude)"></div>
-      <span class="key-label" style="color:var(--claude)">Claude</span>
-      <input class="key-input" type="password" id="bs-key-claude" placeholder="sk-ant-...">
-      <button class="key-save-btn" onclick="saveKey('claude', this)">Save</button>
-      <span class="key-saved" id="saved-claude">Saved ✓</span>
-    </div>
-    <div class="key-row">
-      <div class="key-dot" style="background:var(--gemini)"></div>
-      <span class="key-label" style="color:var(--gemini)">Gemini</span>
-      <input class="key-input" type="password" id="bs-key-gemini" placeholder="AIza...">
-      <button class="key-save-btn" onclick="saveKey('gemini', this)">Save</button>
-      <span class="key-saved" id="saved-gemini">Saved ✓</span>
-    </div>
-    <div class="key-row">
-      <div class="key-dot" style="background:var(--chatgpt)"></div>
-      <span class="key-label" style="color:var(--chatgpt)">ChatGPT</span>
-      <input class="key-input" type="password" id="bs-key-chatgpt" placeholder="sk-proj-...">
-      <button class="key-save-btn" onclick="saveKey('chatgpt', this)">Save</button>
-      <span class="key-saved" id="saved-chatgpt">Saved ✓</span>
-    </div>
-    <div class="key-row">
-      <div class="key-dot" style="background:var(--mistral)"></div>
-      <span class="key-label" style="color:var(--mistral)">Mistral</span>
-      <input class="key-input" type="password" id="bs-key-mistral" placeholder="...">
-      <button class="key-save-btn" onclick="saveKey('mistral', this)">Save</button>
-      <span class="key-saved" id="saved-mistral">Saved ✓</span>
-    </div>
-    <div class="key-row">
-      <div class="key-dot" style="background:var(--deepseek)"></div>
-      <span class="key-label" style="color:var(--deepseek)">DeepSeek</span>
-      <input class="key-input" type="password" id="bs-key-deepseek" placeholder="sk-...">
-      <button class="key-save-btn" onclick="saveKey('deepseek', this)">Save</button>
-      <span class="key-saved" id="saved-deepseek">Saved ✓</span>
-    </div>
+    <div class="backstage-note">Backstage is the moderator's settings panel. API keys live in Netlify environment variables and cannot be edited from the browser. Future moderator settings (per-model configuration, voice parameters, connectivity checks) will appear here.</div>
   </div>
 </div>
 

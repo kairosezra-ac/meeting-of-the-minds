@@ -1,38 +1,8 @@
 // ══ APP.JS — Main application logic ══
-// Navigation, key management, fire logic, model toggles
-
-// ── Keys ──
-// No keys in the code — all keys live in Netlify environment variables.
-// See netlify/functions/ for proxy setup and README.md for setup instructions.
-const PRESET_KEYS = {};
-
-function saveAllKeys() {
-  // No preset keys — all keys are in Netlify environment variables
-}
-
-function loadKeys() {
-  // Keys are stored in Netlify environment variables, not localStorage
-  // Nothing to load here
-}
-
-function saveKey(model, btn) {
-  const input = document.getElementById('bs-key-' + model);
-  const val = input?.value.trim();
-  if (!val) return;
-
-  localStorage.setItem('debate-key-' + model, val);
-
-  // Visual feedback
-  const savedEl = document.getElementById('saved-' + model);
-  if (savedEl) {
-    savedEl.classList.add('show');
-    setTimeout(() => savedEl.classList.remove('show'), 2000);
-  }
-  if (btn) {
-    btn.textContent = 'Saved ✓';
-    setTimeout(() => btn.textContent = 'Save', 2000);
-  }
-}
+// Navigation, fire logic, model toggles
+//
+// API keys live in Netlify environment variables, consumed server-side by
+// netlify/functions/*.js. There is no client-side key handling. See README.md.
 
 // ── Navigation ──
 function switchTab(id, el) {
@@ -45,8 +15,6 @@ function switchTab(id, el) {
 
   const panel = document.getElementById('panel-' + id);
   if (panel) panel.classList.add('active');
-
-  if (id === 'backstage') loadKeys();
 }
 
 // ── Model toggles ──
@@ -182,7 +150,3 @@ async function fireQuestion() {
 document.getElementById('questionInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); fireQuestion(); }
 });
-
-// ── INIT ──
-saveAllKeys();
-loadKeys();
