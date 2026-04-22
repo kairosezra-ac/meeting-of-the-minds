@@ -6,7 +6,12 @@
 //   3. Add MISTRAL_API_KEY with your Mistral API key
 //      Get one at: https://console.mistral.ai
 
+const { verifyOrigin } = require('./_lib/verifyOrigin');
+
 exports.handler = async function(event) {
+  const blocked = verifyOrigin(event, 'mistral');
+  if (blocked) return blocked;
+
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }

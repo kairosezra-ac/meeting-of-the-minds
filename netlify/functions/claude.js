@@ -6,7 +6,12 @@
 //   3. Add ANTHROPIC_API_KEY with your Anthropic API key
 //      Get one at: https://console.anthropic.com
 
+const { verifyOrigin } = require('./_lib/verifyOrigin');
+
 exports.handler = async function(event) {
+  const blocked = verifyOrigin(event, 'claude');
+  if (blocked) return blocked;
+
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
