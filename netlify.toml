@@ -6,3 +6,11 @@
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
+
+# SPA fallback: any path that doesn't match a real file serves
+# index.html so client-side routing (js/router.js) can take over.
+# Must come AFTER the /api rule so functions aren't clobbered.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

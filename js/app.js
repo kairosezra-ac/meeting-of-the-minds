@@ -1,40 +1,17 @@
-// ══ APP.JS — Main application logic ══
-// Navigation, key management, fire logic, model toggles
+// ══ APP.JS — Moderator-zone controller ══
+//
+// Fire loop, model toggles, typewriter, and the intra-zone tab switcher.
+// Zone-level routing lives in js/router.js; this file is agnostic to
+// URLs — it drives the Moderator experience and broadcasts state.
+//
+// API keys live in Netlify environment variables, consumed server-side
+// by netlify/functions/*. There is no client-side key handling.
 
-// ── Keys ──
-// No keys in the code — all keys live in Netlify environment variables.
-// See netlify/functions/ for proxy setup and README.md for setup instructions.
-const PRESET_KEYS = {};
-
-function saveAllKeys() {
-  // No preset keys — all keys are in Netlify environment variables
-}
-
-function loadKeys() {
-  // Keys are stored in Netlify environment variables, not localStorage
-  // Nothing to load here
-}
-
-function saveKey(model, btn) {
-  const input = document.getElementById('bs-key-' + model);
-  const val = input?.value.trim();
-  if (!val) return;
-
-  localStorage.setItem('debate-key-' + model, val);
-
-  // Visual feedback
-  const savedEl = document.getElementById('saved-' + model);
-  if (savedEl) {
-    savedEl.classList.add('show');
-    setTimeout(() => savedEl.classList.remove('show'), 2000);
-  }
-  if (btn) {
-    btn.textContent = 'Saved ✓';
-    setTimeout(() => btn.textContent = 'Save', 2000);
-  }
-}
-
-// ── Navigation ──
+// ── Intra-zone tab switching ──
+// Used by the Moderator tab bar and by the fire loop to spotlight each
+// model as it speaks. Does NOT update the URL — URL-level navigation is
+// Router.navigate(). During a fire round the URL stays at /moderator;
+// /moderator/focus/<model> exists as a deep-link target.
 function switchTab(id, el) {
   document.querySelectorAll('.tab').forEach(t => t.className = 'tab');
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -45,8 +22,6 @@ function switchTab(id, el) {
 
   const panel = document.getElementById('panel-' + id);
   if (panel) panel.classList.add('active');
-
-  if (id === 'backstage') loadKeys();
 }
 
 // ── Model toggles ──
@@ -124,6 +99,12 @@ async function fireQuestion() {
   document.getElementById('fireBtn').disabled = true;
   addToLog(question);
 
+  // Broadcast the new question + clear any stale "speaking" marker so
+  // every open Stage window shows the question and no highlight.
+  if (window.DebateState) {
+    DebateState.update({ currentQuestion: question, currentlySpeaking: null });
+  }
+
   // Clear previous responses
   for (const m of selected) {
     const el = document.getElementById('response-' + m);
@@ -139,8 +120,14 @@ async function fireQuestion() {
     if (statusEl) statusEl.textContent = 'Thinking...';
     if (orbs[model]) orbs[model].setThinking(true);
 
-    // Auto-switch to this model's tab
+    // Spotlight this model in the moderator tab bar AND on every Stage
+    // window (via BroadcastChannel). The moderator's URL stays at
+    // /moderator throughout the round — spotlighting is internal state,
+    // not navigation.
     switchTab(model, document.querySelector(`[data-tab=${model}]`));
+    if (window.DebateState) {
+      DebateState.update({ currentlySpeaking: model });
+    }
 
     try {
       let text;
@@ -174,7 +161,12 @@ async function fireQuestion() {
   document.getElementById('fireBtn').disabled = false;
   isFiring = false;
 
-  // Return to moderator
+  // Round over — clear the "speaking" marker on all Stage windows.
+  if (window.DebateState) {
+    DebateState.update({ currentlySpeaking: null });
+  }
+
+  // Return to moderator dashboard panel (intra-zone; URL unchanged).
   switchTab('mod', document.querySelector('[data-tab=mod]'));
 }
 
@@ -182,7 +174,3 @@ async function fireQuestion() {
 document.getElementById('questionInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); fireQuestion(); }
 });
-
-// ── INIT ──
-saveAllKeys();
-loadKeys();
