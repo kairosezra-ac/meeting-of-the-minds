@@ -74,7 +74,7 @@ Then open `http://localhost:8888` in your browser.
 
 | Model    | Where to get a key | How it's called | Key location |
 |----------|--------------------|-----------------|--------------|
-| Claude   | [console.anthropic.com](https://console.anthropic.com) | Direct browser call | Baked in as fallback |
+| Claude   | [console.anthropic.com](https://console.anthropic.com) | Via Netlify Function | Netlify env var |
 | Gemini   | [aistudio.google.com](https://aistudio.google.com) | Via Netlify Function | Netlify env var |
 | ChatGPT  | [platform.openai.com](https://platform.openai.com) | Via Netlify Function | Netlify env var |
 | Mistral  | [console.mistral.ai](https://console.mistral.ai) | Via Netlify Function | Netlify env var |

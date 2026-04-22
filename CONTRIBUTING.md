@@ -51,9 +51,15 @@ netlify dev
 | Mistral | [console.mistral.ai](https://console.mistral.ai) — free tier available |
 | DeepSeek | [platform.deepseek.com](https://platform.deepseek.com) — very cheap |
 
-### 3. Enter your key
+### 3. Set your API key locally
 
-Open the app → click **⚙ Backstage** → paste your key → Save.
+Keys are read by the serverless functions in `netlify/functions/` from environment variables. For local development, create a `.env` file at the repo root:
+
+    ANTHROPIC_API_KEY=sk-ant-...
+    # or whichever model you're working on — use the env var name
+    # your function expects (see netlify/functions/<your-model>.js)
+
+`netlify dev` loads these automatically. **Do not commit `.env`** — it's already in `.gitignore`.
 
 ### 4. Make your model shine
 
