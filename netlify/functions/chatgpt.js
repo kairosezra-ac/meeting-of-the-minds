@@ -1,5 +1,5 @@
 // ══ NETLIFY FUNCTION — ChatGPT Proxy ══
-// 
+//
 // This serverless function proxies requests to OpenAI's API.
 // It runs server-side so CORS is not an issue.
 //
@@ -8,7 +8,12 @@
 //   2. Go to Site Settings → Environment Variables
 //   3. Add OPENAI_API_KEY with your OpenAI API key
 
+const { verifyOrigin } = require('./_lib/verifyOrigin');
+
 exports.handler = async function(event) {
+  const blocked = verifyOrigin(event, 'chatgpt');
+  if (blocked) return blocked;
+
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }

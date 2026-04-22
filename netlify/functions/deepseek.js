@@ -8,7 +8,12 @@
 //
 // Note: DeepSeek uses OpenAI-compatible API format
 
+const { verifyOrigin } = require('./_lib/verifyOrigin');
+
 exports.handler = async function(event) {
+  const blocked = verifyOrigin(event, 'deepseek');
+  if (blocked) return blocked;
+
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }

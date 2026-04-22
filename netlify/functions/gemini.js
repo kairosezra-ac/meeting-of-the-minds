@@ -1,6 +1,11 @@
 // ══ NETLIFY FUNCTION — Gemini Proxy ══
 
+const { verifyOrigin } = require('./_lib/verifyOrigin');
+
 exports.handler = async function(event) {
+  const blocked = verifyOrigin(event, 'gemini');
+  if (blocked) return blocked;
+
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
