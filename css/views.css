@@ -1,0 +1,342 @@
+/* ══ VIEWS CSS ══
+   Styles for new zones: Root, Entry, Stage (panorama + focus), Auth Gate,
+   and the revised Backstage. The existing Moderator / model-panel styles
+   are unchanged (see moderator.css, orb.css, landing.css).
+*/
+
+/* The intra-Moderator tab bar is only visible inside the moderator zone.
+   In every other zone, hide it entirely. */
+body:not(.zone-moderator) .tab-bar { display: none; }
+
+/* ── ROOT: / ───────────────────────────────────────────── */
+.root-panel {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 5rem 2rem 2rem;
+  text-align: center;
+}
+.root-mark {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 8vw, 5rem);
+  letter-spacing: 0.3em;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+.root-tagline {
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: #888;
+  text-transform: uppercase;
+  margin-bottom: 3rem;
+}
+.root-blurb {
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: #bbb;
+  margin-bottom: 3rem;
+}
+.root-cta {
+  display: inline-block;
+  background: var(--text);
+  color: var(--bg);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.2em;
+  padding: 0.9rem 2.25rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.root-cta:hover { background: var(--claude); color: #fff; }
+
+/* ── ENTRY: /debate/:id ───────────────────────────────── */
+.entry-panel {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 4rem 2rem 2rem;
+  text-align: center;
+}
+.entry-eyebrow {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  color: #888;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.entry-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  letter-spacing: 0.15em;
+  color: var(--text);
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+.entry-subtitle {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: #888;
+  text-transform: uppercase;
+  margin-bottom: 3.5rem;
+}
+.entry-role-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 360px;
+  margin: 0 auto;
+}
+.entry-role-btn {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.2em;
+  padding: 1.1rem 1.5rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+.entry-role-btn:hover {
+  border-color: var(--claude);
+  color: var(--claude);
+}
+.entry-role-desc {
+  display: block;
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  color: #888;
+  text-transform: none;
+  margin-top: 0.4rem;
+}
+
+/* ── AUTH GATE ────────────────────────────────────────── */
+.auth-gate-panel {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 5rem 2rem 2rem;
+}
+.auth-gate-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.2em;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+.auth-gate-subtitle {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: #888;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.auth-gate-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 0.75rem;
+}
+.auth-gate-input:focus { border-color: var(--claude); }
+.auth-gate-submit {
+  width: 100%;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.auth-gate-submit:hover { background: var(--claude); color: #fff; }
+.auth-gate-error {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: #ed2939;
+  margin-top: 0.75rem;
+  min-height: 1em;
+}
+.auth-gate-hint {
+  font-size: 0.65rem;
+  color: #666;
+  line-height: 1.7;
+  margin-top: 2rem;
+  border-top: 1px solid #1a1a1a;
+  padding-top: 1.5rem;
+}
+
+/* ── BACKSTAGE (revised) ──────────────────────────────── */
+.backstage-launch-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.backstage-launch-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+.backstage-launch-btn:hover {
+  border-color: var(--muted);
+  background: #131313;
+}
+.backstage-launch-btn .launch-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.backstage-launch-btn .launch-label {
+  flex: 1;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.backstage-launch-btn .launch-path {
+  color: #666;
+  font-size: 0.62rem;
+  letter-spacing: 0.03em;
+}
+
+/* ── STAGE (stubs) ────────────────────────────────────── */
+.stage-panel {
+  min-height: 100vh;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.stage-question {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: #ccc;
+  text-align: center;
+  max-width: 900px;
+  margin-bottom: 3rem;
+  line-height: 1.5;
+  min-height: 1.5em;
+}
+
+/* Panorama: all five */
+.stage-panorama-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+  max-width: 1100px;
+  width: 100%;
+}
+.stage-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.stage-slot.speaking {
+  border-color: currentColor;
+  background: #151515;
+  box-shadow: 0 0 0 1px currentColor, 0 0 24px rgba(242, 101, 34, 0.25);
+}
+.stage-slot[data-model="claude"].speaking   { color: var(--claude);   box-shadow: 0 0 0 1px var(--claude),   0 0 32px rgba(242,101,34,0.35); }
+.stage-slot[data-model="chatgpt"].speaking  { color: var(--chatgpt);  box-shadow: 0 0 0 1px var(--chatgpt),  0 0 32px rgba(16,163,127,0.35); }
+.stage-slot[data-model="gemini"].speaking   { color: var(--gemini);   box-shadow: 0 0 0 1px var(--gemini),   0 0 32px rgba(251,188,4,0.35); }
+.stage-slot[data-model="mistral"].speaking  { color: var(--mistral);  box-shadow: 0 0 0 1px var(--mistral),  0 0 32px rgba(237,41,57,0.35); }
+.stage-slot[data-model="deepseek"].speaking { color: var(--deepseek); box-shadow: 0 0 0 1px var(--deepseek), 0 0 32px rgba(91,110,245,0.35); }
+
+.stage-model-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-bottom: 0.75rem;
+  transition: box-shadow 0.3s;
+}
+.stage-slot[data-model="claude"]   .stage-model-dot { background: var(--claude); }
+.stage-slot[data-model="chatgpt"]  .stage-model-dot { background: var(--chatgpt); }
+.stage-slot[data-model="gemini"]   .stage-model-dot { background: var(--gemini); }
+.stage-slot[data-model="mistral"]  .stage-model-dot { background: var(--mistral); }
+.stage-slot[data-model="deepseek"] .stage-model-dot { background: var(--deepseek); }
+.stage-slot.speaking .stage-model-dot { box-shadow: 0 0 16px currentColor; }
+
+.stage-model-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.2em;
+  color: #999;
+  text-transform: uppercase;
+  transition: color 0.3s;
+}
+.stage-slot.speaking .stage-model-name { color: currentColor; }
+
+.stage-speaking-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  color: #444;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.stage-slot.speaking .stage-speaking-label { opacity: 1; color: currentColor; }
+
+/* Focus: one model, full-bleed */
+.stage-focus-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  width: 100%;
+  max-width: 900px;
+  padding: 3rem;
+}
+.stage-focus-slot .stage-model-dot {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 1.5rem;
+}
+.stage-focus-slot .stage-model-name {
+  font-size: clamp(3rem, 8vw, 6rem);
+  letter-spacing: 0.25em;
+}
+.stage-focus-slot .stage-speaking-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.4em;
+  margin-top: 1rem;
+}
+
+/* Stub notice — reminds viewers this is placeholder rendering */
+.stage-stub-note {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: #444;
+  text-transform: uppercase;
+  opacity: 0.7;
+}

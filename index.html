@@ -5,27 +5,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Meeting of the Minds — Aligned Conversations × CDI Foundation</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/main.css">
-<link rel="stylesheet" href="css/landing.css">
-<link rel="stylesheet" href="css/moderator.css">
-<link rel="stylesheet" href="css/orb.css">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/landing.css">
+<link rel="stylesheet" href="/css/moderator.css">
+<link rel="stylesheet" href="/css/orb.css">
+<link rel="stylesheet" href="/css/views.css">
 </head>
 <body>
 
-<!-- ══ TAB BAR ══ -->
+<!-- ══ INTRA-MODERATOR-ZONE TAB BAR ══
+     Only visible inside the moderator zone (hidden elsewhere via CSS in
+     views.css). "Home" and "Backstage" are no longer tab-addressable —
+     they're zones reached via URL. -->
 <div class="tab-bar">
-  <div class="tab active-landing" data-tab="landing" onclick="switchTab('landing',this)">Home</div>
-  <div class="tab" data-tab="mod" onclick="switchTab('mod',this)">🎙 Moderator</div>
+  <div class="tab active-mod" data-tab="mod" onclick="switchTab('mod',this)">🎙 Moderator</div>
   <div class="tab" data-tab="claude" onclick="switchTab('claude',this)">Claude</div>
   <div class="tab" data-tab="chatgpt" onclick="switchTab('chatgpt',this)">ChatGPT</div>
   <div class="tab" data-tab="gemini" onclick="switchTab('gemini',this)">Gemini</div>
   <div class="tab" data-tab="mistral" onclick="switchTab('mistral',this)">Mistral</div>
   <div class="tab" data-tab="deepseek" onclick="switchTab('deepseek',this)">DeepSeek</div>
-  <div class="tab" data-tab="backstage" onclick="switchTab('backstage',this)" style="margin-left:auto">⚙ Backstage</div>
 </div>
 
-<!-- ══ LANDING ══ -->
-<div class="panel active" id="panel-landing">
+<!-- ══ ROOT (/) ══
+     Phase 1 holding page. Phase 2 rebuilds this into a debate picker. -->
+<div class="panel" id="panel-root">
+  <div class="root-panel">
+    <div class="root-mark">Arena</div>
+    <div class="root-tagline">Aligned Conversations</div>
+    <div class="root-blurb">
+      A platform for live AI debates — coming soon.<br><br>
+      The first debate runs at Beyond Boundaries Global Festival,
+      Barcelona, April 2026.
+    </div>
+    <a class="root-cta" data-link href="/debate/barcelona">Enter the Barcelona Meeting of the Minds →</a>
+  </div>
+</div>
+
+<!-- ══ ENTRY (/debate/barcelona) ══
+     Role chooser for the Barcelona debate. Reuses the landing-panel
+     hero treatment from the original index so the visual language is
+     preserved; the CTA becomes three role buttons. -->
+<div class="panel" id="panel-entry">
   <div class="landing-panel">
     <div class="landing-eyebrow">Aligned Conversations × CDI Foundation present</div>
     <div class="landing-title">Meeting<br><span class="landing-title-mid">of the</span><br>Minds</div>
@@ -67,7 +87,20 @@
         <div class="landing-model-tag">DeepSeek AI</div>
       </div>
     </div>
-    <button class="landing-start-btn" onclick="switchTab('mod', document.querySelector('[data-tab=mod]'))">Enter the Arena →</button>
+    <div class="entry-role-grid">
+      <a class="entry-role-btn" data-link href="/debate/barcelona/moderator">
+        Enter as Moderator
+        <span class="entry-role-desc">Drive the debate. Auth required.</span>
+      </a>
+      <a class="entry-role-btn" data-link href="/debate/barcelona/backstage">
+        Enter as Stagehand
+        <span class="entry-role-desc">Manage Stage windows. Auth required.</span>
+      </a>
+      <a class="entry-role-btn" data-link href="/debate/barcelona/stage">
+        Enter as Observer
+        <span class="entry-role-desc">Watch the debate. No auth.</span>
+      </a>
+    </div>
     <div class="landing-footer">askallmodels.alignedconversations.com</div>
   </div>
 </div>
@@ -221,59 +254,151 @@
   </div>
 </div>
 
-<!-- ══ BACKSTAGE ══ -->
+<!-- ══ BACKSTAGE (Stagehand workspace) ══
+     Phase 1 stub: one working section, "Launch Stage Window". Six
+     buttons that open Stage URLs in new windows. Real settings and
+     connectivity controls come in a later Phase 1 item. -->
 <div class="panel" id="panel-backstage">
   <div class="backstage-panel">
     <div class="backstage-title">⚙ Backstage 🥊</div>
-    <div class="backstage-subtitle">Operator view — not part of the show</div>
-    <div class="backstage-note">Keys are preloaded. But hit Save to be extra sure, then head to the Moderator tab to begin. Need to swap keys? Paste above and hit Save again.</div>
-    <div class="backstage-section">API Keys</div>
-    <div class="key-row">
-      <div class="key-dot" style="background:var(--claude)"></div>
-      <span class="key-label" style="color:var(--claude)">Claude</span>
-      <input class="key-input" type="password" id="bs-key-claude" placeholder="sk-ant-...">
-      <button class="key-save-btn" onclick="saveKey('claude', this)">Save</button>
-      <span class="key-saved" id="saved-claude">Saved ✓</span>
+    <div class="backstage-subtitle">Stagehand workspace — not part of the show</div>
+    <div class="backstage-note">
+      Backstage is the operator's control surface for the live event.
+      API keys live in Netlify environment variables and cannot be
+      edited from the browser. Future moderator settings (per-model
+      configuration, voice parameters, connectivity checks) will
+      appear here.
     </div>
-    <div class="key-row">
-      <div class="key-dot" style="background:var(--gemini)"></div>
-      <span class="key-label" style="color:var(--gemini)">Gemini</span>
-      <input class="key-input" type="password" id="bs-key-gemini" placeholder="AIza...">
-      <button class="key-save-btn" onclick="saveKey('gemini', this)">Save</button>
-      <span class="key-saved" id="saved-gemini">Saved ✓</span>
-    </div>
-    <div class="key-row">
-      <div class="key-dot" style="background:var(--chatgpt)"></div>
-      <span class="key-label" style="color:var(--chatgpt)">ChatGPT</span>
-      <input class="key-input" type="password" id="bs-key-chatgpt" placeholder="sk-proj-...">
-      <button class="key-save-btn" onclick="saveKey('chatgpt', this)">Save</button>
-      <span class="key-saved" id="saved-chatgpt">Saved ✓</span>
-    </div>
-    <div class="key-row">
-      <div class="key-dot" style="background:var(--mistral)"></div>
-      <span class="key-label" style="color:var(--mistral)">Mistral</span>
-      <input class="key-input" type="password" id="bs-key-mistral" placeholder="...">
-      <button class="key-save-btn" onclick="saveKey('mistral', this)">Save</button>
-      <span class="key-saved" id="saved-mistral">Saved ✓</span>
-    </div>
-    <div class="key-row">
-      <div class="key-dot" style="background:var(--deepseek)"></div>
-      <span class="key-label" style="color:var(--deepseek)">DeepSeek</span>
-      <input class="key-input" type="password" id="bs-key-deepseek" placeholder="sk-...">
-      <button class="key-save-btn" onclick="saveKey('deepseek', this)">Save</button>
-      <span class="key-saved" id="saved-deepseek">Saved ✓</span>
+
+    <div class="backstage-section">Launch Stage Window</div>
+    <div class="backstage-launch-grid">
+      <button class="backstage-launch-btn" onclick="launchStage('')">
+        <div class="launch-dot" style="background:#888"></div>
+        <div class="launch-label">Panorama</div>
+        <div class="launch-path">/stage</div>
+      </button>
+      <button class="backstage-launch-btn" onclick="launchStage('/focus/claude')">
+        <div class="launch-dot" style="background:var(--claude)"></div>
+        <div class="launch-label">Focus · Claude</div>
+        <div class="launch-path">/stage/focus/claude</div>
+      </button>
+      <button class="backstage-launch-btn" onclick="launchStage('/focus/chatgpt')">
+        <div class="launch-dot" style="background:var(--chatgpt)"></div>
+        <div class="launch-label">Focus · ChatGPT</div>
+        <div class="launch-path">/stage/focus/chatgpt</div>
+      </button>
+      <button class="backstage-launch-btn" onclick="launchStage('/focus/gemini')">
+        <div class="launch-dot" style="background:var(--gemini)"></div>
+        <div class="launch-label">Focus · Gemini</div>
+        <div class="launch-path">/stage/focus/gemini</div>
+      </button>
+      <button class="backstage-launch-btn" onclick="launchStage('/focus/mistral')">
+        <div class="launch-dot" style="background:var(--mistral)"></div>
+        <div class="launch-label">Focus · Mistral</div>
+        <div class="launch-path">/stage/focus/mistral</div>
+      </button>
+      <button class="backstage-launch-btn" onclick="launchStage('/focus/deepseek')">
+        <div class="launch-dot" style="background:var(--deepseek)"></div>
+        <div class="launch-label">Focus · DeepSeek</div>
+        <div class="launch-path">/stage/focus/deepseek</div>
+      </button>
     </div>
   </div>
 </div>
 
-<script src="js/models/claude.js"></script>
-<script src="js/models/chatgpt.js"></script>
-<script src="js/models/gemini.js"></script>
-<script src="js/models/mistral.js"></script>
-<script src="js/models/deepseek.js"></script>
-<script src="js/orb.js"></script>
-<script src="js/speech.js"></script>
-<script src="js/moderator.js"></script>
-<script src="js/app.js"></script>
+<!-- ══ STAGE · Panorama ══ stub; Observer default. -->
+<div class="panel" id="panel-stage-panorama">
+  <div class="stage-panel">
+    <div class="stage-question"></div>
+    <div class="stage-panorama-grid">
+      <div class="stage-slot" data-model="claude">
+        <div class="stage-model-dot"></div>
+        <div class="stage-model-name">Claude</div>
+        <div class="stage-speaking-label">Speaking now</div>
+      </div>
+      <div class="stage-slot" data-model="chatgpt">
+        <div class="stage-model-dot"></div>
+        <div class="stage-model-name">ChatGPT</div>
+        <div class="stage-speaking-label">Speaking now</div>
+      </div>
+      <div class="stage-slot" data-model="gemini">
+        <div class="stage-model-dot"></div>
+        <div class="stage-model-name">Gemini</div>
+        <div class="stage-speaking-label">Speaking now</div>
+      </div>
+      <div class="stage-slot" data-model="mistral">
+        <div class="stage-model-dot"></div>
+        <div class="stage-model-name">Mistral</div>
+        <div class="stage-speaking-label">Speaking now</div>
+      </div>
+      <div class="stage-slot" data-model="deepseek">
+        <div class="stage-model-dot"></div>
+        <div class="stage-model-name">DeepSeek</div>
+        <div class="stage-speaking-label">Speaking now</div>
+      </div>
+    </div>
+    <div class="stage-stub-note">Phase 1 stub — visual design pending</div>
+  </div>
+</div>
+
+<!-- ══ STAGE · Focus ══ stub; one model full-bleed. -->
+<div class="panel" id="panel-stage-focus">
+  <div class="stage-panel">
+    <div class="stage-question"></div>
+    <div class="stage-focus-slot stage-slot">
+      <div class="stage-model-dot"></div>
+      <div class="stage-model-name"></div>
+      <div class="stage-speaking-label">Speaking now</div>
+    </div>
+    <div class="stage-stub-note">Phase 1 stub — visual design pending</div>
+  </div>
+</div>
+
+<!-- ══ AUTH GATE ══ appears when a gated route is hit without a session. -->
+<div class="panel" id="panel-auth-gate">
+  <div class="auth-gate-panel">
+    <div class="auth-gate-title">🔒 Authenticate</div>
+    <div class="auth-gate-subtitle">Operator access required</div>
+    <input
+      class="auth-gate-input"
+      id="auth-secret-input"
+      type="password"
+      placeholder="password"
+      autocomplete="off"
+      onkeydown="if(event.key==='Enter'){event.preventDefault();submitAuthGate();}">
+    <button class="auth-gate-submit" onclick="submitAuthGate()">Enter</button>
+    <div class="auth-gate-error" id="auth-gate-error"></div>
+    <div class="auth-gate-hint">
+      Observers don't need a password — visit
+      <a data-link href="/debate/barcelona">the entry</a>
+      and choose "Enter as Observer".
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCRIPTS ══
+     Order matters: model adapters, media engines, and moderator helpers
+     load first. State/auth/router/views are independent singletons. boot
+     runs LAST — it consumes everything above. -->
+<script src="/js/models/claude.js"></script>
+<script src="/js/models/chatgpt.js"></script>
+<script src="/js/models/gemini.js"></script>
+<script src="/js/models/mistral.js"></script>
+<script src="/js/models/deepseek.js"></script>
+<script src="/js/orb.js"></script>
+<script src="/js/speech.js"></script>
+<script src="/js/moderator.js"></script>
+<script src="/js/app.js"></script>
+<script src="/js/state.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/router.js"></script>
+<script src="/js/views/panels.js"></script>
+<script src="/js/views/root.js"></script>
+<script src="/js/views/entry.js"></script>
+<script src="/js/views/authGate.js"></script>
+<script src="/js/views/moderator.js"></script>
+<script src="/js/views/stage.js"></script>
+<script src="/js/views/backstage.js"></script>
+<script src="/js/boot.js"></script>
 </body>
 </html>

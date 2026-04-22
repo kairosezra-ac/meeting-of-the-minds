@@ -45,7 +45,11 @@ askallmodels/
 │       └── deepseek.js         ← DeepSeek API call + persona
 └── netlify/
     └── functions/
+        ├── _lib/
+        │   └── verifyOrigin.js ← Shared origin-check helper
+        ├── claude.js           ← Serverless proxy for Anthropic
         ├── chatgpt.js          ← Serverless proxy for OpenAI
+        ├── gemini.js           ← Serverless proxy for Google
         ├── mistral.js          ← Serverless proxy for Mistral AI
         └── deepseek.js         ← Serverless proxy for DeepSeek
 ```
