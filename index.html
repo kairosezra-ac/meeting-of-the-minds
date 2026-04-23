@@ -180,77 +180,92 @@
 
 <!-- ══ MODEL PANELS (one per model) ══ -->
 <div class="panel" id="panel-claude">
-  <div class="orb-panel">
+  <div class="orb-panel panelist-view">
     <div class="orb-model-name" style="color:var(--claude)">Claude</div>
     <div class="orb-model-tag">Anthropic · Claude Sonnet 4 · Live</div>
     <div class="orb-container"><canvas class="orb-canvas" id="orb-claude" width="480" height="480"></canvas></div>
     <div class="orb-status" id="status-claude"></div>
     <div class="orb-response empty" id="response-claude"></div>
-    <div class="orb-prompt-section">
-      <div class="orb-prompt-label" style="color:var(--claude)">System Prompt</div>
-      <textarea class="orb-prompt-input" id="prompt-claude" rows="4">You are Claude, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are calm, considered, and philosophically grounded. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
-    </div>
     <button class="challenge-btn" id="challenge-claude" onclick="challengeFrom('claude')" style="border-color:rgba(242,101,34,0.4);color:var(--claude)">↩ Challenge Another Model With This</button>
+    <div class="panelist-view__settings">
+      <div class="panelist-view__settings-label">Agent Settings / Stats</div>
+      <div class="panelist-view__settings-field">
+        <div class="orb-prompt-label" style="color:var(--claude)">System Prompt</div>
+        <textarea class="orb-prompt-input" id="prompt-claude" rows="4">You are Claude, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are calm, considered, and philosophically grounded. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="panel" id="panel-chatgpt">
-  <div class="orb-panel">
+  <div class="orb-panel panelist-view">
     <div class="orb-model-name" style="color:var(--chatgpt)">ChatGPT</div>
     <div class="orb-model-tag">OpenAI · GPT-4o · Live</div>
     <div class="orb-container"><canvas class="orb-canvas" id="orb-chatgpt" width="480" height="480"></canvas></div>
     <div class="orb-status" id="status-chatgpt"></div>
     <div class="orb-response empty" id="response-chatgpt"></div>
-    <div class="orb-prompt-section">
-      <div class="orb-prompt-label" style="color:var(--chatgpt)">System Prompt</div>
-      <textarea class="orb-prompt-input" id="prompt-chatgpt" rows="4">You are ChatGPT, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are pragmatic, confident, and solution-oriented. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
-    </div>
     <button class="challenge-btn" id="challenge-chatgpt" onclick="challengeFrom('chatgpt')" style="border-color:rgba(16,163,127,0.4);color:var(--chatgpt)">↩ Challenge Another Model With This</button>
+    <div class="panelist-view__settings">
+      <div class="panelist-view__settings-label">Agent Settings / Stats</div>
+      <div class="panelist-view__settings-field">
+        <div class="orb-prompt-label" style="color:var(--chatgpt)">System Prompt</div>
+        <textarea class="orb-prompt-input" id="prompt-chatgpt" rows="4">You are ChatGPT, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are pragmatic, confident, and solution-oriented. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="panel" id="panel-gemini">
-  <div class="orb-panel">
+  <div class="orb-panel panelist-view">
     <div class="orb-model-name" style="color:var(--gemini)">Gemini</div>
     <div class="orb-model-tag">Google · Gemini 2.5 Flash · Live</div>
     <div class="orb-container"><canvas class="orb-canvas" id="orb-gemini" width="480" height="480"></canvas></div>
     <div class="orb-status" id="status-gemini"></div>
     <div class="orb-response empty" id="response-gemini"></div>
-    <div class="orb-prompt-section">
-      <div class="orb-prompt-label" style="color:var(--gemini)">System Prompt</div>
-      <textarea class="orb-prompt-input" id="prompt-gemini" rows="4">You are Gemini, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are analytical, curious, and expansive in thinking. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
-    </div>
     <button class="challenge-btn" id="challenge-gemini" onclick="challengeFrom('gemini')" style="border-color:rgba(251,188,4,0.4);color:var(--gemini)">↩ Challenge Another Model With This</button>
+    <div class="panelist-view__settings">
+      <div class="panelist-view__settings-label">Agent Settings / Stats</div>
+      <div class="panelist-view__settings-field">
+        <div class="orb-prompt-label" style="color:var(--gemini)">System Prompt</div>
+        <textarea class="orb-prompt-input" id="prompt-gemini" rows="4">You are Gemini, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are analytical, curious, and expansive in thinking. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="panel" id="panel-mistral">
-  <div class="orb-panel">
+  <div class="orb-panel panelist-view">
     <div class="orb-model-name" style="color:var(--mistral)">Mistral</div>
     <div class="orb-model-tag">Mistral AI · Mistral Large · Live</div>
     <div class="orb-container"><canvas class="orb-canvas" id="orb-mistral" width="480" height="480"></canvas></div>
     <div class="orb-status" id="status-mistral"></div>
     <div class="orb-response empty" id="response-mistral"></div>
-    <div class="orb-prompt-section">
-      <div class="orb-prompt-label" style="color:var(--mistral)">System Prompt</div>
-      <textarea class="orb-prompt-input" id="prompt-mistral" rows="4">You are Mistral, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are sharp, precise, with a distinctly European intellectual flair. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
-    </div>
     <button class="challenge-btn" id="challenge-mistral" onclick="challengeFrom('mistral')" style="border-color:rgba(237,41,57,0.4);color:var(--mistral)">↩ Challenge Another Model With This</button>
+    <div class="panelist-view__settings">
+      <div class="panelist-view__settings-label">Agent Settings / Stats</div>
+      <div class="panelist-view__settings-field">
+        <div class="orb-prompt-label" style="color:var(--mistral)">System Prompt</div>
+        <textarea class="orb-prompt-input" id="prompt-mistral" rows="4">You are Mistral, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are sharp, precise, with a distinctly European intellectual flair. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="panel" id="panel-deepseek">
-  <div class="orb-panel">
+  <div class="orb-panel panelist-view">
     <div class="orb-model-name" style="color:var(--deepseek)">DeepSeek</div>
     <div class="orb-model-tag">DeepSeek AI · DeepSeek-V3 · Live</div>
     <div class="orb-container"><canvas class="orb-canvas" id="orb-deepseek" width="480" height="480"></canvas></div>
     <div class="orb-status" id="status-deepseek"></div>
     <div class="orb-response empty" id="response-deepseek"></div>
-    <div class="orb-prompt-section">
-      <div class="orb-prompt-label" style="color:var(--deepseek)">System Prompt</div>
-      <textarea class="orb-prompt-input" id="prompt-deepseek" rows="4">You are DeepSeek, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are rigorous, research-driven, and quietly confident. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
-    </div>
     <button class="challenge-btn" id="challenge-deepseek" onclick="challengeFrom('deepseek')" style="border-color:rgba(91,110,245,0.4);color:var(--deepseek)">↩ Challenge Another Model With This</button>
+    <div class="panelist-view__settings">
+      <div class="panelist-view__settings-label">Agent Settings / Stats</div>
+      <div class="panelist-view__settings-field">
+        <div class="orb-prompt-label" style="color:var(--deepseek)">System Prompt</div>
+        <textarea class="orb-prompt-input" id="prompt-deepseek" rows="4">You are DeepSeek, a panelist at Beyond Boundaries Global Festival in Barcelona, debating: The Future of Conversational AI. You are rigorous, research-driven, and quietly confident. Answer in 2-4 sentences. No markdown, no bullet points — plain spoken language only.</textarea>
+      </div>
+    </div>
   </div>
 </div>
 

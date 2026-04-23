@@ -1,12 +1,36 @@
-/* ══ ORB PANELS CSS ══ */
+/* ══ PANELIST VIEW (the per-model layout primitive) ══
+ *
+ * Rendered inside the Moderator workspace (as each model's tab) and
+ * — eventually — inside Stage Focus mode on external monitors. One
+ * primitive, multiple contexts.
+ *
+ * Class naming is transitional: existing `.orb-*` classes coexist with
+ * new `.panelist-view` / `.panelist-view__*` classes. The existing
+ * classes stay because they're referenced by index.html, js/app.js
+ * (typewriter, orb canvas wiring), and the orb animation setup.
+ * Renaming them all would be a big change with no payoff — the
+ * modifier hook doesn't require it.
+ *
+ * Future modifier: `.panelist-view--focus` applied by Stage Focus
+ * mode to hide the Agent Settings section and adjust presentation
+ * for a public-facing audience on external displays. Not active in
+ * this PR; structure is in place so the modifier can be added
+ * without restructuring.
+ */
+
 .orb-panel {
-  min-height: 100vh;
+  min-height: 100vh;           /* short viewports still render — overflow: auto below handles them */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* justify-content removed: response claims remaining vertical space
+     via flex:1, so centering becomes moot. Children pack top-down. */
   padding: 3rem 2rem;
   position: relative;
+  overflow: auto;              /* bounded response scrolls inside; if fixed
+                                  elements sum taller than viewport, the
+                                  panel itself scrolls rather than clipping. */
+  box-sizing: border-box;
 }
 
 .orb-model-name {
@@ -15,6 +39,7 @@
   letter-spacing: 0.2em;
   margin-bottom: 0.25rem;
   opacity: 0.9;
+  flex: 0 0 auto;
 }
 
 .orb-model-tag {
@@ -22,14 +47,17 @@
   letter-spacing: 0.4em;
   text-transform: uppercase;
   color: #888;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;         /* was 3rem — some of the gap now lives above the orb as breathing room */
+  flex: 0 0 auto;
 }
 
 .orb-container {
   position: relative;
   width: 240px;
   height: 240px;
-  margin-bottom: 2rem;
+  margin-top: 1rem;            /* NEW — breathing room above the orb */
+  margin-bottom: 2.5rem;       /* was 2rem — breathing room below the orb */
+  flex: 0 0 auto;
 }
 
 canvas.orb-canvas {
@@ -45,8 +73,17 @@ canvas.orb-canvas {
   color: var(--muted);
   margin-bottom: 1.5rem;
   height: 1rem;
+  flex: 0 0 auto;
 }
 
+/* ── Bounded scrollable response region ──
+ * flex: 1 claims remaining space between the orb stack above and the
+ * challenge + settings below. overflow-y: auto means long responses
+ * scroll internally; the orb above never gets pushed off-screen.
+ * min-height: 0 is the flex-column-child escape hatch that allows the
+ * region to shrink if needed (without it, flex children default to
+ * their content-intrinsic min-height and can overflow).
+ */
 .orb-response {
   max-width: 600px;
   width: 100%;
@@ -55,7 +92,10 @@ canvas.orb-canvas {
   line-height: 1.8;
   color: #ccc;
   font-weight: 300;
-  min-height: 4rem;
+  flex: 1 1 auto;
+  min-height: 4rem;            /* floor for very tall viewports — keeps a usable box even when fixed parts are small */
+  overflow-y: auto;
+  padding: 0 0.5rem;           /* tiny inset so scrollbar (when present) doesn't hug text */
 }
 
 .orb-response.empty::after {
@@ -79,10 +119,40 @@ canvas.orb-canvas {
   50% { opacity: 0; }
 }
 
-.orb-prompt-section {
+/* ── Agent Settings / Stats section ──
+ * Container for agent metadata. Today it holds only the System Prompt
+ * field; tomorrow it can absorb response time, token count, and
+ * per-model connectivity status without restructuring HTML.
+ *
+ * Visual treatment: muted, clearly subordinate to the response above.
+ */
+.panelist-view__settings {
   width: min(500px, 90vw);
   margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #1a1a1a;    /* soft hairline separating response-zone from meta-zone */
+  flex: 0 0 auto;
 }
+
+.panelist-view__settings-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #666;                      /* more muted than the in-field label — this is a section heading */
+  margin-bottom: 1rem;
+}
+
+.panelist-view__settings-field {
+  margin-bottom: 0.75rem;
+}
+
+/* Focus-mode modifier hook (no-op in this PR; wired up when Stage
+ * Focus mode is built). Kept here as a visible reminder that the
+ * primitive is designed for multiple rendering contexts.
+ *
+ *   .panelist-view--focus .panelist-view__settings { display: none; }
+ *   .panelist-view--focus .orb-response { font-size: 2rem; ... }
+ */
 
 .orb-prompt-label {
   font-size: 0.55rem;
@@ -107,8 +177,10 @@ canvas.orb-canvas {
 }
 .orb-prompt-input:focus { color: #ccc; border-color: #333; }
 
+/* Challenge button now sits between the response and the Agent
+ * Settings section — it's an action on the response, not a setting. */
 .challenge-btn {
-  margin-top: 2rem;
+  margin-top: 1.5rem;          /* was 2rem — response already has its own bottom breathing space */
   font-family: 'DM Mono', monospace;
   font-size: 0.65rem;
   letter-spacing: 0.1em;
@@ -119,6 +191,7 @@ canvas.orb-canvas {
   opacity: 0;
   transition: opacity 0.3s, background 0.2s;
   pointer-events: none;
+  flex: 0 0 auto;
 }
 .challenge-btn.visible { opacity: 1; pointer-events: all; }
 .challenge-btn:hover { background: rgba(255,255,255,0.05); }
