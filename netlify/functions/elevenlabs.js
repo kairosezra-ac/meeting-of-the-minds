@@ -9,13 +9,6 @@
 
 const { verifyOrigin } = require('./_lib/verifyOrigin');
 
-const VOICE_SETTINGS = {
-  stability: 0.5,
-  similarity_boost: 0.75,
-  style: 0.3,
-  use_speaker_boost: true,
-};
-
 exports.handler = async function(event) {
   const blocked = verifyOrigin(event, 'elevenlabs');
   if (blocked) return blocked;
@@ -44,31 +37,63 @@ exports.handler = async function(event) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Missing text or voiceId' }) };
   }
 
-  const response = await fetch('https://api.elevenlabs.io/v1/text-to-speech/' + voiceId, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'xi-api-key': apiKey,
-      'Accept': 'audio/mpeg',
-    },
-    body: JSON.stringify({
-      text: text,
-      model_id: 'eleven_multilingual_v2',
-      voice_settings: VOICE_SETTINGS,
-    }),
+  // Build the outbound request explicitly so we can log it before sending.
+  // voice_settings intentionally omitted: per ElevenLabs docs, voice_settings
+  // overrides the voice's stored settings for that request only. Omitting
+  // lets the voice's stored settings render through (matches ElevenLabs web
+  // UI default).
+  const outboundUrl = 'https://api.elevenlabs.io/v1/text-to-speech/' + voiceId;
+  const outboundHeaders = {
+    'Content-Type': 'application/json',
+    'xi-api-key': apiKey,
+    'Accept': 'audio/mpeg',
+  };
+  const outboundBody = JSON.stringify({
+    text: text,
+    model_id: 'eleven_multilingual_v2',
   });
 
+  // ── Diagnostic: log the complete outbound request (key redacted)
+  const redactedHeaders = Object.assign({}, outboundHeaders, { 'xi-api-key': '[REDACTED]' });
+  console.log('[elevenlabs-out]', JSON.stringify({
+    url: outboundUrl,
+    method: 'POST',
+    headers: redactedHeaders,
+    body: outboundBody,
+  }));
+
+  const response = await fetch(outboundUrl, {
+    method: 'POST',
+    headers: outboundHeaders,
+    body: outboundBody,
+  });
+
+  // Capture response headers for the diagnostic log
+  const inboundHeaders = {};
+  response.headers.forEach(function(v, k) { inboundHeaders[k] = v; });
+
   if (!response.ok) {
-    // Log the full vendor response for debugging in Netlify Function logs;
-    // return a generic error to the client (vendor responses sometimes
-    // echo the request, which could include user text).
     const errBody = await response.text().catch(function() { return ''; });
-    console.error('[elevenlabs] vendor error', response.status, errBody.slice(0, 300));
+    // ── Diagnostic: log the inbound error response in full
+    console.log('[elevenlabs-in]', JSON.stringify({
+      status: response.status,
+      statusText: response.statusText,
+      headers: inboundHeaders,
+      body: errBody,
+    }));
     return {
       statusCode: response.status,
       body: JSON.stringify({ error: 'ElevenLabs API error: ' + response.status }),
     };
   }
+
+  // ── Diagnostic: log the inbound success metadata (no body — it's binary)
+  console.log('[elevenlabs-in]', JSON.stringify({
+    status: response.status,
+    statusText: response.statusText,
+    headers: inboundHeaders,
+    bodyType: 'binary audio/mpeg',
+  }));
 
   const buffer = await response.arrayBuffer();
   const base64 = Buffer.from(buffer).toString('base64');
