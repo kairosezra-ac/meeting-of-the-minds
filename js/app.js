@@ -93,6 +93,10 @@ function challengeFrom(model) {
 let isFiring = false;
 let lastResponse = {};
 
+// Pacing pause between models — gives the audience a beat to absorb
+// each answer before the next begins. Skipped after the last model.
+const INTER_MODEL_BUFFER_MS = 1200;
+
 async function fireQuestion() {
   if (isFiring) return;
 
@@ -104,7 +108,7 @@ async function fireQuestion() {
   addToLog(question);
 
   // Broadcast the new question + clear any stale "speaking" marker so
-  // every open Stage window shows the question and no highlight.
+  // every open Stage window starts the round clean.
   if (window.DebateState) {
     DebateState.update({ currentQuestion: question, currentlySpeaking: null });
   }
@@ -117,8 +121,13 @@ async function fireQuestion() {
     if (btn) btn.classList.remove('visible');
   }
 
-  // Fire models sequentially — each one speaks before the next begins
-  for (const model of selected) {
+  // Fire models sequentially — each one speaks before the next begins.
+  // for-i (not for-of) so we can detect the final iteration and skip
+  // the inter-model buffer after the last model.
+  const selectedArray = Array.from(selected);
+  for (let i = 0; i < selectedArray.length; i++) {
+    const model = selectedArray[i];
+
     setStatus('Asking ' + modelNames[model], 'thinking...');
     const statusEl = document.getElementById('status-' + model);
     if (statusEl) statusEl.textContent = 'Thinking...';
@@ -149,26 +158,47 @@ async function fireQuestion() {
 
       lastResponse[model] = text;
       if (orbs[model]) orbs[model].setThinking(false);
+
+      // Speaking phase. Fire loop owns the orb's speaking flag and the
+      // per-model status text — the speech engine (Web Speech or
+      // ElevenLabs) only handles audio playback + Promise resolution.
+      // The orb glows for the entire span (typewriter + audio when ON;
+      // typewriter alone when OFF). Promise.all waits for the slower of
+      // the two before unlatching the speaking state.
+      if (statusEl) statusEl.textContent = 'Speaking...';
+      if (orbs[model]) orbs[model].setSpeaking(true);
+
       await Promise.all([typeText(model, text), speak(text, model)]);
 
+      if (orbs[model]) orbs[model].setSpeaking(false);
+      if (statusEl) statusEl.textContent = '';
     } catch(err) {
       if (orbs[model]) orbs[model].setThinking(false);
+      // Defensive — if Promise.all threw mid-flight, setSpeaking may have
+      // been latched true. Clear it so the orb doesn't strand mid-pulse.
+      if (orbs[model]) orbs[model].setSpeaking(false);
       const el = document.getElementById('response-' + model);
       if (el) { el.classList.remove('empty'); el.textContent = 'Error: ' + err.message; }
+      if (statusEl) statusEl.textContent = '';
       console.error(model, err);
     }
 
-    if (statusEl) statusEl.textContent = '';
+    // Clear the broadcast "currently speaking" so Stage windows mirror
+    // the local orb returning to idle. Without this, Stage windows
+    // would show the previous speaker glowing through the buffer pause.
+    if (window.DebateState) {
+      DebateState.update({ currentlySpeaking: null });
+    }
+
+    // Inter-model pacing pause — skipped after the final model.
+    if (i < selectedArray.length - 1) {
+      await new Promise(function(r) { setTimeout(r, INTER_MODEL_BUFFER_MS); });
+    }
   }
 
   setStatus('Round complete', 'fire the next question');
   document.getElementById('fireBtn').disabled = false;
   isFiring = false;
-
-  // Round over — clear the "speaking" marker on all Stage windows.
-  if (window.DebateState) {
-    DebateState.update({ currentlySpeaking: null });
-  }
 
   // Return to moderator dashboard panel (intra-zone; URL unchanged).
   switchTab('mod', document.querySelector('[data-tab=mod]'));
