@@ -63,6 +63,10 @@ function typeText(model, text) {
     function type() {
       if (i < text.length) {
         el.insertBefore(document.createTextNode(text[i]), cursor);
+        // Keep the typewriter caret in view inside the bounded response
+        // region. On short responses this is a no-op (nothing to scroll);
+        // on long responses it keeps new characters visible as they appear.
+        el.scrollTop = el.scrollHeight;
         i++;
         setTimeout(type, 18);
       } else {
