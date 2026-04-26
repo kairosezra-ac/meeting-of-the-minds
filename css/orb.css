@@ -130,6 +130,35 @@ canvas.orb-canvas {
   margin-bottom: 0.75rem;
 }
 
+/* ── Audio toggle (per-model) ──
+ * Lives at the top of the Agent Settings section. Filled speaker
+ * icon when audio is ON; slashed speaker when OFF. State held in
+ * js/audio-state.js (volatile — resets on refresh).
+ */
+.audio-toggle-row { display: flex; align-items: center; gap: 0.5rem; }
+
+.audio-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, opacity 0.15s;
+}
+.audio-toggle.on  { color: var(--text); border-color: #2a2a2a; }
+.audio-toggle.off { color: var(--muted); opacity: 0.5; }
+.audio-toggle:hover { border-color: #3a3a3a; }
+.audio-toggle .audio-icon { fill: currentColor; }
+.audio-toggle.on  .audio-icon-off { display: none; }
+.audio-toggle.off .audio-icon-on  { display: none; }
+
 .orb-prompt-label {
   font-size: 0.55rem;
   letter-spacing: 0.35em;
