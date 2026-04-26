@@ -1,9 +1,14 @@
-// ══ SPEECH ENGINE — ElevenLabs ══
+// ══ SPEECH ENGINE — TTS dispatcher (ElevenLabs + Voxtral) ══
 //
 // Drop-in replacement for js/speech.js. Same public interface so the
 // fire loop in js/app.js doesn't change. js/speech.js is preserved
 // untouched as a fallback; index.html selects which engine via the
 // <script> tag.
+//
+// Vendor routing: most models go to ElevenLabs. The Mistral character
+// uses Voxtral (Mistral AI's TTS) — see VOICE_VENDOR below. The
+// dispatch is per-model, so swapping a single character's vendor is
+// a one-line change.
 //
 // This engine does NOT manage orb state or status text — the fire loop
 // owns those. This file's only responsibility is audio playback (when
@@ -13,13 +18,31 @@
 // no fallback to Web Speech. The fire loop continues; the typewriter
 // still types; only audio is missing for that turn.
 
+const VOICE_VENDOR = {
+  claude:   'elevenlabs',
+  chatgpt:  'elevenlabs',
+  gemini:   'elevenlabs',
+  mistral:  'voxtral',
+  deepseek: 'elevenlabs',
+};
+
+// ElevenLabs voice IDs. Mistral entry is intentionally retained for a
+// one-line revert path (flip VOICE_VENDOR.mistral back to 'elevenlabs')
+// if Voxtral has issues during the show. Zero runtime cost — only read
+// when VOICE_VENDOR points at elevenlabs.
 const VOICE_IDS = {
   claude:   'ntHkqwSzLpNOhjpTHQTE',
   chatgpt:  'o87gVFEcB69P1s56N8hj',
   gemini:   'pvcQOjj7sb5caUTCIXSg',
-  mistral:  '5Ss5cCclN4XaAC1N9kSZ',
+  mistral:  '5Ss5cCclN4XaAC1N9kSZ',  // unused while routing through voxtral; kept for revert
   deepseek: 'TWfoo9aPizRIb0jEV36a',
 };
+
+function getEndpoint(model) {
+  return VOICE_VENDOR[model] === 'voxtral'
+    ? '/.netlify/functions/voxtral'
+    : '/.netlify/functions/elevenlabs';
+}
 
 // ── iOS audio unlock ──
 // Safari blocks programmatic audio playback until a user gesture has
@@ -55,7 +78,7 @@ function speak(text, model) {
       return;
     }
 
-    fetch('/.netlify/functions/elevenlabs', {
+    fetch(getEndpoint(model), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ text: text, voiceId: voiceId }),
