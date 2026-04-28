@@ -9,6 +9,19 @@
 
 const { verifyOrigin } = require('./_lib/verifyOrigin');
 
+// ── ElevenLabs v3 model + settings ──
+// model_id:        eleven_v3 — higher-expressiveness model
+// stability:       0.5 (Natural preset) — expressive but stable;
+//                  ElevenLabs' recommended default for v3
+// seed:            fixed integer for output determinism. v3 is
+//                  non-deterministic by default; same text + voice +
+//                  seed → same audio.
+// MAX_TEXT_LENGTH: v3's per-request hard cap (v2 allowed 10000).
+const MODEL_ID = 'eleven_v3';
+const STABILITY = 0.5;
+const SEED = 181818;
+const MAX_TEXT_LENGTH = 3000;
+
 exports.handler = async function(event) {
   const blocked = verifyOrigin(event, 'elevenlabs');
   if (blocked) return blocked;
@@ -37,11 +50,23 @@ exports.handler = async function(event) {
     return { statusCode: 400, body: JSON.stringify({ error: 'Missing text or voiceId' }) };
   }
 
+  // Defensive char-limit guard. v3 caps at 3000 chars per request (vs
+  // v2's 10000). Debate turns are typically 200-500 chars so this
+  // should never fire — but if a model goes long, truncate rather
+  // than let ElevenLabs reject the request and have the audience
+  // hear silence on a model's turn.
+  if (text.length > MAX_TEXT_LENGTH) {
+    console.warn('[elevenlabs-out] text length exceeds v3 3000-char limit, truncating', {
+      originalLength: text.length,
+      truncatedTo: MAX_TEXT_LENGTH,
+    });
+    text = text.slice(0, MAX_TEXT_LENGTH);
+  }
+
   // Build the outbound request explicitly so we can log it before sending.
-  // voice_settings intentionally omitted: per ElevenLabs docs, voice_settings
-  // overrides the voice's stored settings for that request only. Omitting
-  // lets the voice's stored settings render through (matches ElevenLabs web
-  // UI default).
+  // For v3 we send only `stability` in voice_settings — similarity_boost,
+  // style, and use_speaker_boost are ignored or unsupported on v3 per
+  // ElevenLabs docs. The fixed seed makes regenerations deterministic.
   const outboundUrl = 'https://api.elevenlabs.io/v1/text-to-speech/' + voiceId;
   const outboundHeaders = {
     'Content-Type': 'application/json',
@@ -50,7 +75,9 @@ exports.handler = async function(event) {
   };
   const outboundBody = JSON.stringify({
     text: text,
-    model_id: 'eleven_multilingual_v2',
+    model_id: MODEL_ID,
+    voice_settings: { stability: STABILITY },
+    seed: SEED,
   });
 
   // ── Diagnostic: log the complete outbound request (key redacted)
