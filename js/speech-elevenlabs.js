@@ -1,7 +1,6 @@
 // ══ SPEECH ENGINE — TTS dispatcher (ElevenLabs + Voxtral) ══
 //
-// Drop-in replacement for js/speech.js. Same public interface so the
-// fire loop in js/app.js doesn't change. js/speech.js is preserved
+// Drop-in replacement for js/speech.js. js/speech.js is preserved
 // untouched as a fallback; index.html selects which engine via the
 // <script> tag.
 //
@@ -10,9 +9,16 @@
 // dispatch is per-model, so swapping a single character's vendor is
 // a one-line change.
 //
-// This engine does NOT manage orb state or status text — the fire loop
-// owns those. This file's only responsibility is audio playback (when
-// AudioState.isAudioOn(model) is true) and Promise resolution.
+// This engine does NOT manage orb state or status text directly. The
+// fire loop owns those, but it needs to know the moment audio actually
+// starts playing so it can flip "Thinking…" → "Speaking…" at the right
+// time (not when the LLM call returns — that's 1–2s before audio
+// actually plays). The 3rd argument to speak() is an `onPlaybackStart`
+// callback that fires exactly once when:
+//   - audio.onplay fires (the success path), OR
+//   - we know audio will not play (toggle off, fetch failure, audio
+//     error, play() rejected) — so the fire loop's state isn't stuck
+//     in "Thinking…" while the typewriter renders the response.
 //
 // Hard fail on errors: log to console, resolve the Promise, no retry,
 // no fallback to Web Speech. The fire loop continues; the typewriter
@@ -62,11 +68,27 @@ function unlockAudio() {
 document.addEventListener('touchstart', unlockAudio);
 document.addEventListener('click', unlockAudio);
 
-function speak(text, model) {
+function speak(text, model, onPlaybackStart) {
   return new Promise(function(resolve) {
-    // Toggle off → no audio. Resolve immediately. Fire loop's Promise.all
-    // still waits on the typewriter; orb state is fire-loop-managed.
+    // The callback must fire exactly once per call. The `started` flag
+    // guards against double-firing if multiple events occur (e.g.
+    // audio.onplay then audio.onerror mid-playback).
+    let started = false;
+    function fireOnce() {
+      if (started) return;
+      started = true;
+      if (typeof onPlaybackStart === 'function') {
+        try { onPlaybackStart(); }
+        catch (e) { console.error('[speech-elevenlabs] onPlaybackStart threw', e); }
+      }
+    }
+
+    // Toggle off → no audio. Fire callback so the moderator's status
+    // transitions to "Speaking…" for the typewriter's duration, then
+    // resolve immediately. Fire loop's Promise.all still waits on
+    // typeText.
     if (window.AudioState && !window.AudioState.isAudioOn(model)) {
+      fireOnce();
       resolve();
       return;
     }
@@ -74,6 +96,7 @@ function speak(text, model) {
     const voiceId = VOICE_IDS[model];
     if (!voiceId) {
       console.error('[speech-elevenlabs] No voice ID for model:', model);
+      fireOnce();
       resolve();
       return;
     }
@@ -96,18 +119,26 @@ function speak(text, model) {
         URL.revokeObjectURL(audioUrl);
         resolve();
       };
+      // Success path: audio actually starts → fire the callback.
+      audio.onplay = function() { fireOnce(); };
       audio.onended = cleanup;
       audio.onerror = function(e) {
         console.error('[speech-elevenlabs] playback error', e);
+        // Even on mid-playback error, ensure the callback fired so
+        // the state isn't stranded in "Thinking…".
+        fireOnce();
         cleanup();
       };
       audio.play().catch(function(e) {
         console.error('[speech-elevenlabs] play() rejected', e);
+        fireOnce();
         cleanup();
       });
     }).catch(function(err) {
-      // Hard fail per spec: log, resolve, no fallback.
+      // Hard fail per spec: log, fire callback so state isn't stuck,
+      // resolve. No retry, no fallback.
       console.error('[speech-elevenlabs]', err);
+      fireOnce();
       resolve();
     });
   });
