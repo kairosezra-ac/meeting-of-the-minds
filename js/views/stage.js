@@ -95,6 +95,36 @@
     updatePanoramaIndicator(DebateState.get());
   }
 
+  // ── Static panorama orbs ──
+  // Draws each panorama canvas ONCE using the same drawOrb() function
+  // the focus view uses (defined in js/orb.js). No requestAnimationFrame
+  // loop — the result is a frozen still, visually identical to a focus
+  // orb at intensity 0.5 / phase 0. Called on script load; canvases are
+  // already in the DOM by that point (this script loads after the body).
+  //
+  // COLORS is declared at top-level in js/orb.js; in classic-script
+  // load order it's accessible via the shared script lexical scope.
+  // Defensive fallback inlines the RGB tuples in case scope access
+  // fails on some browser configuration.
+  function drawStaticPanoramaOrbs() {
+    if (typeof drawOrb !== 'function') {
+      console.warn('[stage] drawOrb not in scope; static panorama orbs will not render');
+      return;
+    }
+    const colors = (typeof COLORS !== 'undefined') ? COLORS : {
+      claude:   [242, 101,  34],
+      chatgpt:  [ 16, 163, 127],
+      gemini:   [251, 188,   4],
+      mistral:  [237,  41,  57],
+      deepseek: [ 91, 110, 245],
+    };
+    MODELS.forEach(function(model) {
+      drawOrb('panorama-' + model, colors[model].join(','), 0, 0.5);
+    });
+  }
+
+  drawStaticPanoramaOrbs();
+
   window.Views.renderStagePanorama = renderPanorama;
   window.Views.renderStageFocus = renderFocus;
   window.Views.refreshStagePanorama = refreshPanorama;
