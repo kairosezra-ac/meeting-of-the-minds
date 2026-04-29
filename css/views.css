@@ -337,6 +337,15 @@ body:not(.zone-moderator) .tab-bar { display: none; }
 .stage-panorama-grid .stage-slot[data-model="mistral"]  .stage-model-name { color: var(--mistral); }
 .stage-panorama-grid .stage-slot[data-model="deepseek"] .stage-model-name { color: var(--deepseek); }
 
+/* Brand-color text glow on the model name when its slot is the current
+ * speaker. currentColor resolves to the per-model brand color via the
+ * always-on rules above, so no per-model duplication is needed.
+ * The .speaking class is toggled by updatePanoramaIndicator() in
+ * js/views/stage.js when DebateState.currentlySpeaking changes. */
+.stage-panorama-grid .stage-slot[data-model].speaking .stage-model-name {
+  text-shadow: 0 0 12px currentColor;
+}
+
 /* Focus: one model, full-bleed */
 .stage-focus-slot {
   display: flex;
