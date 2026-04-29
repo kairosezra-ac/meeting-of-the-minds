@@ -303,6 +303,40 @@ body:not(.zone-moderator) .tab-bar { display: none; }
 }
 .stage-slot.speaking .stage-speaking-label { opacity: 1; color: currentColor; }
 
+/* ── Panorama redesign — "council assembled" ──
+ * Five orbs floating in dark space. Each orb is the same canvas-rendered
+ * visual as the focus view, drawn once as a static still (see
+ * drawStaticPanoramaOrbs() in js/views/stage.js). No animations, no card
+ * backgrounds, no per-slot speaking glow — just the orbs and labels.
+ *
+ * Selectors target [data-model] for higher specificity than the existing
+ * `.stage-slot[data-model="X"].speaking` rules so the panorama overrides
+ * win without !important. Focus view (.stage-focus-slot) is unaffected. */
+.stage-panorama-grid .stage-slot[data-model],
+.stage-panorama-grid .stage-slot[data-model].speaking {
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  transition: none;
+}
+
+.panorama-orb {
+  width: 60%;
+  aspect-ratio: 1 / 1;
+  max-width: 280px;
+  display: block;
+  margin: 0 auto 0.75rem;       /* centered + space below before model name */
+}
+
+/* Per-model brand-color names — visual cohesion with the orbs and
+ * legibility from the back of the room. */
+.stage-panorama-grid .stage-slot[data-model="claude"]   .stage-model-name { color: var(--claude); }
+.stage-panorama-grid .stage-slot[data-model="chatgpt"]  .stage-model-name { color: var(--chatgpt); }
+.stage-panorama-grid .stage-slot[data-model="gemini"]   .stage-model-name { color: var(--gemini); }
+.stage-panorama-grid .stage-slot[data-model="mistral"]  .stage-model-name { color: var(--mistral); }
+.stage-panorama-grid .stage-slot[data-model="deepseek"] .stage-model-name { color: var(--deepseek); }
+
 /* Focus: one model, full-bleed */
 .stage-focus-slot {
   display: flex;

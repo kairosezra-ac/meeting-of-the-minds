@@ -357,35 +357,33 @@
   </div>
 </div>
 
-<!-- ══ STAGE · Panorama ══ stub; Observer default. -->
+<!-- ══ STAGE · Panorama ══
+     Five orbs — same visual recipe as the focus orbs, drawn once as
+     static stills (no animation). Pure black background. Council
+     assembled. The previous question text is intentionally absent —
+     the audience already heard it. -->
 <div class="panel" id="panel-stage-panorama">
   <div class="stage-panel">
-    <div class="stage-question"></div>
     <div class="stage-panorama-grid">
       <div class="stage-slot" data-model="claude">
-        <div class="stage-model-dot"></div>
+        <canvas class="panorama-orb" id="orb-panorama-claude" width="480" height="480"></canvas>
         <div class="stage-model-name">Claude</div>
-        <div class="stage-speaking-label">Speaking now</div>
       </div>
       <div class="stage-slot" data-model="chatgpt">
-        <div class="stage-model-dot"></div>
+        <canvas class="panorama-orb" id="orb-panorama-chatgpt" width="480" height="480"></canvas>
         <div class="stage-model-name">ChatGPT</div>
-        <div class="stage-speaking-label">Speaking now</div>
       </div>
       <div class="stage-slot" data-model="gemini">
-        <div class="stage-model-dot"></div>
+        <canvas class="panorama-orb" id="orb-panorama-gemini" width="480" height="480"></canvas>
         <div class="stage-model-name">Gemini</div>
-        <div class="stage-speaking-label">Speaking now</div>
       </div>
       <div class="stage-slot" data-model="mistral">
-        <div class="stage-model-dot"></div>
+        <canvas class="panorama-orb" id="orb-panorama-mistral" width="480" height="480"></canvas>
         <div class="stage-model-name">Mistral</div>
-        <div class="stage-speaking-label">Speaking now</div>
       </div>
       <div class="stage-slot" data-model="deepseek">
-        <div class="stage-model-dot"></div>
+        <canvas class="panorama-orb" id="orb-panorama-deepseek" width="480" height="480"></canvas>
         <div class="stage-model-name">DeepSeek</div>
-        <div class="stage-speaking-label">Speaking now</div>
       </div>
     </div>
     <div class="stage-stub-note">Phase 1 stub — visual design pending</div>
