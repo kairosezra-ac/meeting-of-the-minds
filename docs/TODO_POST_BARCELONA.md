@@ -39,6 +39,16 @@ landed.
 Small CSS fix, deferred from before voice-integration work. Single-file
 change, low risk; just hasn't been picked up.
 
+### v3 model upgrade — attempted and reverted Apr 28
+
+Deployed v3 to a preview branch with `stability=0.5` (Natural) and
+`seed=181818`. Subjective voice quality was more expressive, but
+latency increase made it unsuitable for live stage delivery. Closed
+without merging.
+
+**Reconsider** post-Barcelona — possibly with `eleven_flash_v2_5`
+(75ms latency) instead, which trades some quality for speed.
+
 ---
 
 ## Architecture decision: native-ecosystem TTS, partially realized
