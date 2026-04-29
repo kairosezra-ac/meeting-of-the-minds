@@ -157,18 +157,22 @@ async function fireQuestion() {
       }
 
       lastResponse[model] = text;
-      if (orbs[model]) orbs[model].setThinking(false);
+      // Don't setThinking(false) yet. "Thinking…" persists through the
+      // TTS round-trip so audience and operator see "Thinking" during
+      // the actual think — including the LLM call AND the time it
+      // takes for audio to start playing. The transition to "Speaking"
+      // fires inside the onPlaybackStart callback below, when the
+      // speech engine signals that audio actually started (or when
+      // it knows audio won't play — toggle off, error path, etc.).
+      // setSpeaking(true) implicitly exits the thinking state in the
+      // orb engine (intensity 0.7 → 1.0, speaking=true).
 
-      // Speaking phase. Fire loop owns the orb's speaking flag and the
-      // per-model status text — the speech engine (Web Speech or
-      // ElevenLabs) only handles audio playback + Promise resolution.
-      // The orb glows for the entire span (typewriter + audio when ON;
-      // typewriter alone when OFF). Promise.all waits for the slower of
-      // the two before unlatching the speaking state.
-      if (statusEl) statusEl.textContent = 'Speaking...';
-      if (orbs[model]) orbs[model].setSpeaking(true);
+      const onPlaybackStart = function() {
+        if (statusEl) statusEl.textContent = 'Speaking...';
+        if (orbs[model]) orbs[model].setSpeaking(true);
+      };
 
-      await Promise.all([typeText(model, text), speak(text, model)]);
+      await Promise.all([typeText(model, text), speak(text, model, onPlaybackStart)]);
 
       if (orbs[model]) orbs[model].setSpeaking(false);
       if (statusEl) statusEl.textContent = '';

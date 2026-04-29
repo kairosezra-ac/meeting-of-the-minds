@@ -83,12 +83,18 @@ canvas.orb-canvas {
   padding: 0 0.5rem;           /* tiny inset so scrollbar (when present) doesn't hug text */
 }
 
-.orb-response.empty::after {
-  content: 'Awaiting question from moderator...';
+/* Static section label above the response area. Per-model brand color
+ * via inline style="color:var(--<model>)" in the panel HTML, falling
+ * back to muted gray. Replaces the previous .orb-response.empty::after
+ * placeholder ("Awaiting question from moderator...") which was a
+ * misnamed state label. The header is always visible regardless of
+ * whether the response area is empty or filled. */
+.orb-transcript-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
   color: var(--muted);
-  font-style: italic;
-  font-size: 0.8rem;
-  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
 }
 
 .orb-cursor {
