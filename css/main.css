@@ -59,6 +59,7 @@ body {
 .tab.active-gemini   { color: var(--gemini);   border-bottom-color: var(--gemini); }
 .tab.active-mistral  { color: var(--mistral);  border-bottom-color: var(--mistral); }
 .tab.active-deepseek { color: var(--deepseek); border-bottom-color: var(--deepseek); }
+.tab.active-stage-panorama { color: var(--text); border-bottom-color: var(--text); }
 
 /* ── PANELS ── */
 .panel { display: none; }

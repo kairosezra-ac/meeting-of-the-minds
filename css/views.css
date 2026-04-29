@@ -329,8 +329,11 @@ body:not(.zone-moderator) .tab-bar { display: none; }
   margin-top: 1rem;
 }
 
-/* Stub notice — reminds viewers this is placeholder rendering */
+/* Stub notice — reminds viewers this is placeholder rendering.
+ * Hidden for showtime: real panorama rendering is no longer a stub.
+ * Toggle display back to a non-none value if the dev label is wanted. */
 .stage-stub-note {
+  display: none;
   position: fixed;
   bottom: 1rem;
   right: 1rem;
