@@ -322,9 +322,9 @@ body:not(.zone-moderator) .tab-bar { display: none; }
 }
 
 .panorama-orb {
-  width: 60%;
+  width: 100%;
   aspect-ratio: 1 / 1;
-  max-width: 280px;
+  max-width: 560px;
   display: block;
   margin: 0 auto 0.75rem;       /* centered + space below before model name */
 }
