@@ -84,6 +84,18 @@
     }
   });
 
+  // Refresh the panorama indicator from current DebateState without
+  // touching panel classes or the body zone. Used by the moderator-
+  // workspace Panorama tab: switchTab() toggles .active, then this
+  // pulls current speaker/question into the embedded view so it
+  // reflects state immediately rather than waiting for the next
+  // broadcast. Standalone /stage route is unaffected — it goes through
+  // renderPanorama() above.
+  function refreshPanorama() {
+    updatePanoramaIndicator(DebateState.get());
+  }
+
   window.Views.renderStagePanorama = renderPanorama;
   window.Views.renderStageFocus = renderFocus;
+  window.Views.refreshStagePanorama = refreshPanorama;
 })();
